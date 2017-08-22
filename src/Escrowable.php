@@ -14,11 +14,12 @@ trait Escrowable
 
     /**
      * @return EscrowPolicy
+     *
      * @throws \Exception
      */
     public function escrowPolicy()
     {
-        if (! property_exists(static::class, 'escrowPolicy')) {
+        if (!property_exists(static::class, 'escrowPolicy')) {
             throw new \Exception('Missing escrow policy');
         }
 

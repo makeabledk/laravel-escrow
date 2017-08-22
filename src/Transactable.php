@@ -5,7 +5,7 @@ namespace Makeable\LaravelEscrow;
 use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
 use Makeable\ValueObjects\Amount\Amount;
 
-trait Depositable
+trait Transactable
 {
     /**
      * @return mixed
@@ -29,21 +29,5 @@ trait Depositable
     public function getBalance()
     {
         return Amount::sum($this->deposits, 'amount')->subtract(Amount::sum($this->charges, 'amount'));
-    }
-
-    /**
-     * @return Amount
-     */
-    public function getDepositAmountAttribute()
-    {
-        return new Amount($this->attributes['deposit_amount'], $this->deposit_currency);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isFunded()
-    {
-        return $this->getBalance()->gte($this->deposit_amount);
     }
 }

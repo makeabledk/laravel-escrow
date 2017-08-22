@@ -2,21 +2,22 @@
 
 namespace Makeable\LaravelEscrow;
 
-use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
-use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
+use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
+use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 
 trait EscrowActions
 {
     /**
      * @return bool
+     *
      * @throws IllegalEscrowAction
      */
     public function cancel()
     {
         $this->requiresStatus(null);
 
-        if($this->policy('cancel')) {
+        if ($this->policy('cancel')) {
             $this->forceFill(['status' => 0])->save();
 
             return $this->policy('cancelled');
@@ -27,7 +28,9 @@ trait EscrowActions
 
     /**
      * @param Transaction $transaction
+     *
      * @throws IllegalEscrowAction
+     *
      * @return bool
      */
     public function deposit($transaction)
@@ -36,7 +39,7 @@ trait EscrowActions
 
         if ($this->policy('deposit', $transaction) && $this->deposits()->save($transaction)) {
             if ($this->policy('deposited', $transaction)) {
-                return $this->isFunded()? $this->policy('funded') : true;
+                return $this->isFunded() ? $this->policy('funded') : true;
             }
         }
 
@@ -45,6 +48,7 @@ trait EscrowActions
 
     /**
      * @return bool
+     *
      * @throws InsufficientFunds
      * @throws IllegalEscrowAction
      */
@@ -52,7 +56,7 @@ trait EscrowActions
     {
         $this->requiresStatus(null);
 
-        if (! $this->isFunded()) {
+        if (!$this->isFunded()) {
             throw new InsufficientFunds();
         }
 
@@ -68,6 +72,7 @@ trait EscrowActions
     /**
      * @param $action
      * @param array $args
+     *
      * @return bool
      */
     protected function policy($action, ...$args)
@@ -77,12 +82,14 @@ trait EscrowActions
 
     /**
      * @param $status
+     *
      * @return bool
+     *
      * @throws IllegalEscrowAction
      */
     protected function requiresStatus($status)
     {
-        if($this->status !== $status) {
+        if ($this->status !== $status) {
             throw new IllegalEscrowAction();
         }
 

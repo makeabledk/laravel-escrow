@@ -9,6 +9,7 @@ abstract class EscrowPolicy
 {
     /**
      * @param EscrowableContract $escrowable
+     *
      * @return bool
      */
     public function cancel($escrowable)
@@ -18,6 +19,7 @@ abstract class EscrowPolicy
 
     /**
      * @param EscrowableContract $escrowable
+     *
      * @return bool
      */
     public function cancelled($escrowable)
@@ -26,8 +28,9 @@ abstract class EscrowPolicy
     }
 
     /**
-     * @param EscrowableContract $escrowable
+     * @param EscrowableContract  $escrowable
      * @param TransactionContract $transaction
+     *
      * @return bool
      */
     public function deposit($escrowable, $transaction)
@@ -36,8 +39,9 @@ abstract class EscrowPolicy
     }
 
     /**
-     * @param EscrowableContract $escrowable
+     * @param EscrowableContract  $escrowable
      * @param TransactionContract $transaction
+     *
      * @return bool
      */
     public function deposited($escrowable, $transaction)
@@ -47,6 +51,7 @@ abstract class EscrowPolicy
 
     /**
      * @param EscrowableContract $escrowable
+     *
      * @return bool
      */
     public function funded($escrowable)
@@ -56,6 +61,7 @@ abstract class EscrowPolicy
 
     /**
      * @param EscrowableContract $escrowable
+     *
      * @return bool
      */
     public function release($escrowable)
@@ -65,6 +71,7 @@ abstract class EscrowPolicy
 
     /**
      * @param EscrowableContract $escrowable
+     *
      * @return bool
      */
     public function released($escrowable)
