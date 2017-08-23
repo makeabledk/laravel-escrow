@@ -8,9 +8,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
 use Makeable\LaravelEscrow\Contracts\TransactionContract;
-use Makeable\LaravelEscrow\EscrowServiceProvider;
+use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
-use Makeable\LaravelEscrow\Tests\Fakes\Transaction;
+use Makeable\LaravelEscrow\Transaction;
 use Makeable\ValueObjects\Amount\Amount;
 use Makeable\ValueObjects\Amount\TestCurrency;
 
@@ -65,6 +65,7 @@ class TestCase extends BaseTestCase
             $table->integer('destination_id');
             $table->decimal('amount');
             $table->string('currency');
+            $table->timestamps();
 
             $table->index(['source_type', 'source_id']);
             $table->index(['destination_type', 'destination_id']);

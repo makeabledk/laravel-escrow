@@ -1,22 +1,21 @@
 <?php
 
-namespace Makeable\LaravelEscrow\Tests\Fakes;
+namespace Makeable\LaravelEscrow;
 
 use Makeable\LaravelEscrow\Contracts\TransactionContract;
 use Makeable\ValueObjects\Amount\Amount;
 
 class Transaction extends \Illuminate\Database\Eloquent\Model implements TransactionContract
 {
+    /**
+     * @var string
+     */
+    protected $table = 'transactions';
 
     /**
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @return Amount

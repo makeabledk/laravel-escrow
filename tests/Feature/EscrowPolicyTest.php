@@ -7,7 +7,7 @@ use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Tests\Fakes\PassingProductEscrowPolicy;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
-use Makeable\LaravelEscrow\Tests\Fakes\Transaction;
+use Makeable\LaravelEscrow\Transaction;
 use Makeable\LaravelEscrow\Tests\TestCase;
 use Mockery;
 
@@ -19,6 +19,12 @@ class EscrowPolicyTest extends TestCase
 
         return Escrow::init(factory(Product::class)->create());
     }
+
+    public function test_empty()
+    {
+        $this->assertTrue(true);
+    }
+
 //
 //    public function test_policy_received_cancellation_callbacks()
 //    {

@@ -6,7 +6,7 @@ use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
-use Makeable\LaravelEscrow\Tests\Fakes\Transaction;
+use Makeable\LaravelEscrow\Transaction;
 use Makeable\LaravelEscrow\Tests\TestCase;
 
 class EscrowTest extends TestCase
@@ -30,16 +30,16 @@ class EscrowTest extends TestCase
         $this->assertTrue($transaction->amount->equals($escrow->getBalance()));
     }
 
-    public function test_the_balance_also_includes_charges()
+    public function test_the_balance_also_includes_withdrawals()
     {
-        $charge = factory(Transaction::class)->make();
+        $withdrawal = factory(Transaction::class)->make();
         $deposit = factory(Transaction::class)->make();
 
         $escrow = $this->escrow();
-        $escrow->charges()->save($charge);
+        $escrow->withdrawals()->save($withdrawal);
         $escrow->deposits()->save($deposit);
 
-        $this->assertTrue($escrow->getBalance()->equals($deposit->amount->subtract($charge->amount)));
+        $this->assertTrue($escrow->getBalance()->equals($deposit->amount->subtract($withdrawal->amount)));
     }
 
     public function test_it_cannot_be_release_until_funded()

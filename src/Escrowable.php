@@ -9,7 +9,7 @@ trait Escrowable
      */
     public function escrow()
     {
-        return Escrow::escrowable($this)->first() ?: Escrow::init($this);
+        return app(Escrow::class)::escrowable($this)->first() ?: Escrow::init($this);
     }
 
     /**

@@ -10,7 +10,7 @@ trait Transactable
     /**
      * @return mixed
      */
-    public function charges()
+    public function withdrawals()
     {
         return $this->morphMany(app(Transaction::class), 'source');
     }
@@ -28,6 +28,6 @@ trait Transactable
      */
     public function getBalance()
     {
-        return Amount::sum($this->deposits, 'amount')->subtract(Amount::sum($this->charges, 'amount'));
+        return Amount::sum($this->deposits, 'amount')->subtract(Amount::sum($this->withdrawals, 'amount'));
     }
 }
