@@ -17,12 +17,11 @@ class Escrow extends \Illuminate\Database\Eloquent\Model
     protected $table = 'escrows';
 
     /**
-     * @param EscrowableContract $escrowable
      * @return Escrow
      */
-    public static function init($escrowable)
+    public static function init(...$args)
     {
-        return app(EscrowRepository::class)->create($escrowable);
+        return app(EscrowRepository::class)->create(...$args);
     }
 
     /**

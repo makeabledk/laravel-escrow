@@ -17,7 +17,8 @@
         "laravel/laravel": "^5.4",
         "doctrine/dbal": "^2.5",
         "orchestra/testbench": "~3.0",
-        "mockery/mockery": "^0.9.9"
+        "mockery/mockery": "^0.9.9",
+        "laravel/cashier": "^7.0"
     },
     "autoload-dev": {
         "psr-4": {

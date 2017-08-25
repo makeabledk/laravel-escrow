@@ -8,73 +8,83 @@ use Makeable\LaravelEscrow\Contracts\TransactionContract;
 abstract class EscrowPolicy
 {
     /**
+     * @param Escrow $escrow
      * @param EscrowableContract $escrowable
      *
      * @return bool
      */
-    public function cancel($escrowable)
+    public function cancel($escrow, $escrowable)
+    {
+        $escrow->deposits->each(function($transaction) {
+            $transaction->charge()->refund();
+        });
+        return true;
+    }
+
+    /**
+     * @param Escrow $escrow
+     * @param EscrowableContract $escrowable
+     *
+     * @return bool
+     */
+    public function cancelled($escrow, $escrowable)
     {
         return true;
     }
 
     /**
-     * @param EscrowableContract $escrowable
-     *
-     * @return bool
-     */
-    public function cancelled($escrowable)
-    {
-        return true;
-    }
-
-    /**
+     * @param Escrow  $escrow
      * @param EscrowableContract  $escrowable
      * @param TransactionContract $transaction
      *
      * @return bool
      */
-    public function deposit($escrowable, $transaction)
+    public function deposit($escrow, $escrowable, $transaction)
     {
         return true;
     }
 
     /**
+     * @param Escrow  $escrow
      * @param EscrowableContract  $escrowable
      * @param TransactionContract $transaction
      *
      * @return bool
      */
-    public function deposited($escrowable, $transaction)
+    public function deposited($escrow, $escrowable, $transaction)
     {
         return true;
     }
 
     /**
+     * @param Escrow $escrow
      * @param EscrowableContract $escrowable
      *
      * @return bool
      */
-    public function funded($escrowable)
+    public function funded($escrow, $escrowable)
     {
         return true;
     }
 
     /**
+     * @param Escrow $escrow
      * @param EscrowableContract $escrowable
      *
      * @return bool
      */
-    public function release($escrowable)
+    public function release($escrow, $escrowable)
     {
         return true;
     }
 
     /**
+     * @param Escrow $escrow
      * @param EscrowableContract $escrowable
      *
      * @return bool
      */
-    public function released($escrowable)
+    public function released($escrow, $escrowable)
     {
         return true;
     }

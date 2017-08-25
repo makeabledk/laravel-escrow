@@ -2,9 +2,11 @@
 
 namespace Makeable\LaravelEscrow;
 
+use Makeable\LaravelEscrow\Contracts\CustomerContract as Customer;
 use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
+use Makeable\ValueObjects\Amount\Amount;
 
 trait EscrowActions
 {
@@ -24,6 +26,22 @@ trait EscrowActions
         }
 
         return false;
+    }
+
+    /**
+     * @param Customer $customer
+     * @return bool
+     */
+    public function chargeDepositFrom($customer)
+    {
+        $amount = $this->escrowable->getDepositAmount()->subtract($this->getBalance())->minimum(Amount::zero()); // TODO handle current balnce and no charge if zero
+        $charge = $customer->charge($amount->get(), $amount->currency()->code);
+        $transaction = app(Transaction::class)
+            ->setAmount($amount)
+            ->setReference($charge)
+            ->setSource($customer);
+
+        return $this->deposit($transaction);
     }
 
     /**
