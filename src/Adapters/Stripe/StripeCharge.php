@@ -1,9 +1,10 @@
 <?php
 
-namespace Makeable\StripeConnectEscrow\Stripe;
+namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Makeable\LaravelEscrow\Contracts\ChargeContract;
+use Makeable\ValueObjects\Amount\Amount;
 use Stripe\Charge;
 
 class StripeCharge implements ChargeContract
@@ -19,10 +20,15 @@ class StripeCharge implements ChargeContract
     protected $object;
 
     /**
-     * StripeCharge constructor.
+´    * @param Charge $object
      */
-    private function __construct()
+    public function __construct($object)
     {
+        if (! $object instanceof Charge) {
+            throw new ModelNotFoundException();
+        }
+        $this->id = $object->id;
+        $this->object = $object;
     }
 
     /**
@@ -31,15 +37,7 @@ class StripeCharge implements ChargeContract
      */
     public static function findOrFail($id)
     {
-        $charge = new static;
-        $charge->id = $id;
-        $charge->object = Charge::retrieve($id);
-
-        if(!$charge->object) {
-            throw new ModelNotFoundException();
-        }
-
-        return $charge;
+        return new static(Charge::retrieve($id));
     }
 
     /**
@@ -51,14 +49,19 @@ class StripeCharge implements ChargeContract
     }
 
     /**
+     * @return Amount
+     */
+    public function getAmount()
+    {
+        // TODO handle refund amounts
+        return new Amount($this->object->amount, $this->object->currency);
+    }
+
+    /**
      * @return StripeCharge
      */
     public function refund()
     {
-        $refund = new static;
-        $refund->object = $this->object->refund();
-        $refund->id = $refund->object['id'];
-
-        return $refund;
+        return new static($this->object->refund());
     }
 }

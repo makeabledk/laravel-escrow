@@ -10,16 +10,6 @@ use Makeable\ValueObjects\Amount\Amount;
 class Transaction extends \Illuminate\Database\Eloquent\Model implements TransactionContract
 {
     /**
-     * @var string
-     */
-    protected $table = 'transactions';
-
-    /**
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function destination()
@@ -36,6 +26,8 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
     }
 
     /**
+     * Refund the charge and create a reversed transaction
+     *
      * @return Transaction
      */
     public function refund()

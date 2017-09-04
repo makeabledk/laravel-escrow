@@ -14,11 +14,6 @@ interface EscrowableContract extends EloquentContract
     public function customer();
 
     /**
-     * @return EscrowPolicy
-     */
-    public function escrowPolicy();
-
-    /**
      * @return Amount
      */
     public function getDepositAmount();
@@ -26,7 +21,12 @@ interface EscrowableContract extends EloquentContract
     /**
      * @return Amount
      */
-    public function getFullAmount();
+    public function getCustomerAmount();
+
+    /**
+     * @return Amount
+     */
+    public function getProviderAmount();
 
     /**
      * @return BelongsTo
