@@ -14,12 +14,10 @@ class ChargeCustomerRemaining
      */
     public function handle($escrow, PaymentProvider $provider)
     {
-        $amount = $escrow->escrowable->getDepositAmount()
-            ->subtract($escrow->getBalance())
-            ->minimum(Amount::zero());
+        $amount = $escrow->escrowable->getCustomerAmount()->subtract($escrow->getBalance());
 
         if ($amount->gt(Amount::zero())) {
-            Interact::call(DepositToEscrow::class, $escrow, $provider->charge($escrow->customer, $amount));
+            Interact::call(DepositToEscrow::class, $escrow, $provider->charge($escrow->customer, $amount, 'ESCROW#'.$escrow->id));
         }
     }
 }

@@ -9,7 +9,8 @@ interface PaymentProviderContract
     /**
      * @param CustomerContract $customer
      * @param Amount $amount
+     * @param $reference
      * @return ChargeContract
      */
-    public function charge($customer, $amount);
+    public function charge($customer, $amount, $reference = null);
 }

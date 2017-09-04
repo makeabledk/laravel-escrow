@@ -14,9 +14,7 @@ class ChargeCustomerDeposit
      */
     public function handle($escrow, PaymentProvider $provider)
     {
-        $amount = $escrow->escrowable->getDepositAmount()
-            ->subtract($escrow->getBalance())
-            ->minimum(Amount::zero());
+        $amount = $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance());
 
         if ($amount->gt(Amount::zero())) {
             Interact::call(DepositToEscrow::class, $escrow, $provider->charge($escrow->customer, $amount));
