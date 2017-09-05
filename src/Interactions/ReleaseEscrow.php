@@ -2,7 +2,6 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
-use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 

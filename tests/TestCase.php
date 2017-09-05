@@ -57,20 +57,6 @@ class TestCase extends BaseTestCase
             $table->increments('id');
         });
 
-//        DB::connection()->getSchemaBuilder()->create('transactions', function (Blueprint $table) {
-//            $table->increments('id');
-//            $table->string('source_type');
-//            $table->integer('source_id');
-//            $table->string('destination_type');
-//            $table->integer('destination_id');
-//            $table->decimal('amount');
-//            $table->string('currency');
-//            $table->timestamps();
-//
-//            $table->index(['source_type', 'source_id']);
-//            $table->index(['destination_type', 'destination_id']);
-//        });
-
         // Create escrows table
         Artisan::call('vendor:publish', ['--tag' => 'migrations', '--provider' => EscrowServiceProvider::class]);
         Artisan::call('migrate');
@@ -84,8 +70,7 @@ class TestCase extends BaseTestCase
                 'source_id' => 1,
                 'destination_type' => 'bar',
                 'destination_id' => 1,
-                'amount' => rand(100, 200),
-                'currency' => array_rand(TestCurrency::$currencies)
+                'currency_code' => array_rand(TestCurrency::$currencies)
             ];
         });
     }

@@ -20,8 +20,6 @@ class CreateEscrowsTable extends Migration
             $table->integer('customer_id');
             $table->string('provider_type');
             $table->integer('provider_id');
-            $table->decimal('deposit_amount');
-            $table->string('deposit_currency');
             $table->boolean('status')->nullable();
             $table->timestamps();
 

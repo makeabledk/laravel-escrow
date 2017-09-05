@@ -11,7 +11,8 @@ trait Escrowable
     {
         return app(Escrow::class)::escrowable($this)->first() ?: Escrow::init($this);
     }
-//
+
+    //
 //    /**
 //     * @return EscrowPolicy
 //     *

@@ -20,11 +20,11 @@ class StripeTransfer implements TransferContract
     protected $object;
 
     /**
-´    * @param Transfer $object
+     ´    * @param Transfer $object
      */
     public function __construct($object)
     {
-        if (! $object instanceof Transfer) {
+        if (!$object instanceof Transfer) {
             throw new ModelNotFoundException();
         }
         $this->id = $object->id;
@@ -33,6 +33,7 @@ class StripeTransfer implements TransferContract
 
     /**
      * @param $id
+     *
      * @return StripeTransfer
      */
     public static function findOrFail($id)

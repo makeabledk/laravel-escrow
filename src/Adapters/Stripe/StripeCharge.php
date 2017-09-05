@@ -20,11 +20,11 @@ class StripeCharge implements ChargeContract
     protected $object;
 
     /**
-´    * @param Charge $object
+     ´    * @param Charge $object
      */
     public function __construct($object)
     {
-        if (! $object instanceof Charge) {
+        if (!$object instanceof Charge) {
             throw new ModelNotFoundException();
         }
         $this->id = $object->id;
@@ -33,6 +33,7 @@ class StripeCharge implements ChargeContract
 
     /**
      * @param $id
+     *
      * @return StripeCharge
      */
     public static function findOrFail($id)

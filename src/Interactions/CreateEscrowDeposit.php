@@ -12,9 +12,9 @@ use Makeable\LaravelEscrow\Events\EscrowFunded;
 class CreateEscrowDeposit
 {
     /**
-     * @param Escrow $escrow
+     * @param Escrow           $escrow
      * @param EloquentContract $source
-     * @param Charge $charge
+     * @param Charge           $charge
      */
     public function handle($escrow, $source, $charge)
     {
@@ -27,7 +27,7 @@ class CreateEscrowDeposit
 
         event(new EscrowDeposited($escrow, $transaction));
 
-        if($escrow->isFunded()) {
+        if ($escrow->isFunded()) {
             event(new EscrowFunded($escrow));
         }
     }

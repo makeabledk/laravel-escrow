@@ -9,7 +9,7 @@ use Makeable\ValueObjects\Amount\Amount;
 class ChargeCustomerRemaining
 {
     /**
-     * @param Escrow $escrow
+     * @param Escrow          $escrow
      * @param PaymentProvider $provider
      */
     public function handle($escrow, PaymentProvider $provider)

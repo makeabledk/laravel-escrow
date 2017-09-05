@@ -9,15 +9,15 @@
     "require": {
         "php": ">=7.0.0",
         "laravel/framework": "5.5",
-        "makeabledk/php-value-objects": "dev-master"
+        "makeabledk/php-value-objects": "dev-master",
+        "makeabledk/laravel-eloquent-status": "^0.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.3",
         "laravel/laravel": "5.5",
         "doctrine/dbal": "^2.5",
         "orchestra/testbench": "~3.5",
-        "mockery/mockery": "^0.9.9",
-        "laravel/cashier": "^7.0"
+        "mockery/mockery": "^0.9.9"
     },
     "autoload-dev": {
         "psr-4": {
@@ -34,7 +34,5 @@
     "scripts": {
         "test": "./vendor/bin/phpunit",
         "style": "./vendor/bin/php-cs-fixer fix ./src --rules=@PSR2,@Symfony,ordered_class_elements,ordered_imports --verbose"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }

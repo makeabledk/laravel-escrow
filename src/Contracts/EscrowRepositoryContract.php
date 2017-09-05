@@ -8,11 +8,10 @@ interface EscrowRepositoryContract
 {
     /**
      * @param EscrowableContract $escrowable
-     * @param CustomerContract $escrowable
-     * @param ProviderContract $escrowable
+     * @param CustomerContract   $escrowable
+     * @param ProviderContract   $escrowable
      *
      * @return Escrow
      */
     public function create($escrowable, $customer, $provider);
-
 }

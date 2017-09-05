@@ -9,6 +9,7 @@ class EscrowPolicy
 {
     /**
      * @param Escrow $escrow
+     *
      * @return bool
      */
     public function cancel($escrow)
@@ -20,7 +21,8 @@ class EscrowPolicy
     }
 
     /**
-     * @param Escrow  $escrow
+     * @param Escrow $escrow
+     *
      * @return bool
      */
     public function deposit($escrow)
@@ -32,6 +34,7 @@ class EscrowPolicy
 
     /**
      * @param Escrow $escrow
+     *
      * @return bool
      */
     public function release($escrow)

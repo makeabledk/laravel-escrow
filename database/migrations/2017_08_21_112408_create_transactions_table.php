@@ -20,7 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->string('destination_type');
             $table->integer('destination_id');
             $table->decimal('amount');
-            $table->string('currency');
+            $table->string('currency_code');
             $table->timestamps();
 
             $table->index(['charge_id']);

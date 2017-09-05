@@ -3,7 +3,6 @@
 namespace Makeable\LaravelEscrow\Interactions;
 
 use Makeable\LaravelEscrow\Contracts\PaymentProviderContract as PaymentProvider;
-use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\ValueObjects\Amount\Amount;
 

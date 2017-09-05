@@ -26,13 +26,13 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
     }
 
     /**
-     * Refund the charge and create a reversed transaction
+     * Refund the charge and create a reversed transaction.
      *
      * @return Transaction
      */
     public function refund()
     {
-        return tap(new static)
+        return tap(new static())
             ->setAmount($this->amount)
             ->setCharge($this->charge->refund())
             ->setDestination($this->source)
@@ -60,6 +60,7 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
 
     /**
      * @param Amount $amount
+     *
      * @return $this
      */
     public function setAmount($amount)
@@ -72,6 +73,7 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
 
     /**
      * @param ChargeContract $charge
+     *
      * @return $this
      */
     public function setCharge($charge)
@@ -83,6 +85,7 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
 
     /**
      * @param EloquentContract $source
+     *
      * @return $this
      */
     public function setDestination($source)
@@ -95,6 +98,7 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
 
     /**
      * @param EloquentContract $source
+     *
      * @return $this
      */
     public function setSource($source)

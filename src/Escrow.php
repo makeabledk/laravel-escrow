@@ -4,17 +4,10 @@ namespace Makeable\LaravelEscrow;
 
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
 use Makeable\LaravelEscrow\Contracts\EscrowRepositoryContract as EscrowRepository;
-use Makeable\LaravelEscrow\Contracts\CustomerContract as Customer;
-use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
-use Makeable\LaravelEscrow\Events\EscrowCancelled;
-use Makeable\LaravelEscrow\Events\EscrowDeposited;
-use Makeable\LaravelEscrow\Events\EscrowFunded;
-use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
 use Makeable\LaravelEscrow\Interactions\ChargeCustomerDeposit;
-use Makeable\LaravelEscrow\Interactions\CreateEscrowDeposit;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
 use Makeable\ValueObjects\Amount\Amount;

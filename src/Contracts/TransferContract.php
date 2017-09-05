@@ -8,6 +8,7 @@ interface TransferContract
 {
     /**
      * @param $id
+     *
      * @return mixed
      */
     public static function findOrFail($id);

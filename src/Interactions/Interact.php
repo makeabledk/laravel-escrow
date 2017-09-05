@@ -9,11 +9,12 @@ class Interact
     /**
      * @param $interaction
      * @param array ...$parameters
+     *
      * @return mixed
      */
     public static function call($interaction, ...$parameters)
     {
-        if (! Str::contains($interaction, '@')) {
+        if (!Str::contains($interaction, '@')) {
             $interaction = $interaction.'@handle';
         }
 

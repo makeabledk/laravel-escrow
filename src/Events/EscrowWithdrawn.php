@@ -21,7 +21,7 @@ class EscrowWithdrawn
     public $transaction;
 
     /**
-     * @param Escrow $escrow
+     * @param Escrow      $escrow
      * @param Transaction $transaction
      */
     public function __construct($escrow, $transaction)

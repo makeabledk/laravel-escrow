@@ -12,8 +12,8 @@ class EscrowRepository implements EscrowRepositoryContract
 {
     /**
      * @param EscrowableContract $escrowable
-     * @param CustomerContract $customer
-     * @param ProviderContract $provider
+     * @param CustomerContract   $customer
+     * @param ProviderContract   $provider
      *
      * @return Escrow
      */

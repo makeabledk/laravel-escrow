@@ -3,7 +3,6 @@
 namespace Makeable\LaravelEscrow\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Makeable\LaravelEscrow\EscrowPolicy;
 use Makeable\ValueObjects\Amount\Amount;
 
 interface EscrowableContract extends EloquentContract

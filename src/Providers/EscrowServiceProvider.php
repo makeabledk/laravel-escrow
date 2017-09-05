@@ -21,7 +21,7 @@ class EscrowServiceProvider extends ServiceProvider
     {
         $this->app->bind(ChargeContract::class, StripeCharge::class);
         $this->app->bind(EscrowRepositoryContract::class, EscrowRepository::class);
-        $this->app->singleton(PaymentProviderContract::class, function() {
+        $this->app->singleton(PaymentProviderContract::class, function () {
             return new StripePaymentProvider(config('services.stripe.secret'));
         });
     }

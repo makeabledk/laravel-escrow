@@ -28,8 +28,9 @@ class StripePaymentProvider implements PaymentProvider
 
     /**
      * @param Customer $customer
-     * @param Amount $amount
-     * @param null $reference
+     * @param Amount   $amount
+     * @param null     $reference
+     *
      * @return Charge
      */
     public function charge($customer, $amount, $reference = null)
@@ -38,22 +39,23 @@ class StripePaymentProvider implements PaymentProvider
             'amount' => $amount->get(),
             'currency' => $amount->currency()->getCode(),
             'customer' => $customer->stripe_id,
-            'api_key' => $this->apiKey
+            'api_key' => $this->apiKey,
         ];
 
-        if($reference) {
+        if ($reference) {
             $options['transfer_group'] = $reference;
         }
 
         return app()->make(Charge::class, [
-            StripeCharge::create($options)
+            StripeCharge::create($options),
         ]);
     }
 
     /**
      * @param Provider $provider
-     * @param Amount $amount
-     * @param null $reference
+     * @param Amount   $amount
+     * @param null     $reference
+     *
      * @return Transfer
      */
     public function pay($provider, $amount, $reference = null)
@@ -62,15 +64,15 @@ class StripePaymentProvider implements PaymentProvider
             'amount' => $amount->get(),
             'currency' => $amount->currency()->getCode(),
             'destination' => $provider->stripe_account_id,
-            'api_key' => $this->apiKey
+            'api_key' => $this->apiKey,
         ];
 
-        if($reference) {
+        if ($reference) {
             $options['transfer_group'] = $reference;
         }
 
         return app()->make(Transfer::class, [
-            StripeTransfer::create($options)
+            StripeTransfer::create($options),
         ]);
     }
 }
