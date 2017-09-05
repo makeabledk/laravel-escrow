@@ -2,12 +2,11 @@
 
 namespace Makeable\LaravelEscrow;
 
-use Makeable\LaravelEscrow\Contracts\ChargeContract;
-use Makeable\LaravelEscrow\Contracts\EloquentContract;
-use Makeable\LaravelEscrow\Contracts\TransactionContract;
+use Makeable\LaravelEscrow\Contracts\TransferContract;
 use Makeable\ValueObjects\Amount\Amount;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Transaction extends \Illuminate\Database\Eloquent\Model implements TransactionContract
+class Transaction extends Eloquent
 {
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -26,7 +25,7 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
     }
 
     /**
-     * Refund the charge and create a reversed transaction.
+     * Refund the transfer and create a reversed transaction.
      *
      * @return Transaction
      */
@@ -34,9 +33,9 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
     {
         return tap(new static())
             ->setAmount($this->amount)
-            ->setCharge($this->charge->refund())
             ->setDestination($this->source)
             ->setSource($this->destination)
+            ->setTransfer($this->transfer->refund())
             ->save();
     }
 
@@ -51,11 +50,11 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
     }
 
     /**
-     * @return ChargeContract
+     * @return TransferContract
      */
-    public function getChargeAttribute()
+    public function getTransferAttribute()
     {
-        return app()->call([ChargeContract::class, 'findOrFail'], [$this->charge_id]);
+        return call_user_func([$this->transfer_type, 'findOrFail'], $this->transfer_id);
     }
 
     /**
@@ -72,19 +71,7 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
     }
 
     /**
-     * @param ChargeContract $charge
-     *
-     * @return $this
-     */
-    public function setCharge($charge)
-    {
-        return $this->forceFill([
-            'charge_id' => $charge->getKey(),
-        ]);
-    }
-
-    /**
-     * @param EloquentContract $source
+     * @param Eloquent $source
      *
      * @return $this
      */
@@ -97,7 +84,7 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
     }
 
     /**
-     * @param EloquentContract $source
+     * @param Eloquent $source
      *
      * @return $this
      */
@@ -106,6 +93,19 @@ class Transaction extends \Illuminate\Database\Eloquent\Model implements Transac
         return $this->forceFill([
             'source_type' => $source->getMorphClass(),
             'source_id' => $source->getKey(),
+        ]);
+    }
+
+    /**
+     * @param TransferContract $transfer
+     *
+     * @return $this
+     */
+    public function setTransfer($transfer)
+    {
+        return $this->forceFill([
+            'transfer_type' => get_class($transfer),
+            'transfer_id' => $transfer->getKey(),
         ]);
     }
 }

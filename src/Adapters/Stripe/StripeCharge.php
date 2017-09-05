@@ -3,11 +3,11 @@
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Makeable\LaravelEscrow\Contracts\ChargeContract;
+use Makeable\LaravelEscrow\Contracts\TransferContract;
 use Makeable\ValueObjects\Amount\Amount;
 use Stripe\Charge;
 
-class StripeCharge implements ChargeContract
+class StripeCharge implements TransferContract
 {
     /**
      * @var mixed
@@ -20,7 +20,7 @@ class StripeCharge implements ChargeContract
     protected $object;
 
     /**
-     ´    * @param Charge $object
+     * @param Charge $object
      */
     public function __construct($object)
     {

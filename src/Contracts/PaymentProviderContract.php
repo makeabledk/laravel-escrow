@@ -8,16 +8,16 @@ interface PaymentProviderContract
 {
     /**
      * @param CustomerContract $customer
-     * @param Amount           $amount
+     * @param Amount $amount
      * @param $reference
      *
-     * @return ChargeContract
+     * @return TransferContract
      */
     public function charge($customer, $amount, $reference = null);
 
     /**
      * @param ProviderContract $provider
-     * @param Amount           $amount
+     * @param Amount $amount
      * @param $reference
      *
      * @return TransferContract

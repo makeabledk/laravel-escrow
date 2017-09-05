@@ -8,8 +8,8 @@ interface EscrowRepositoryContract
 {
     /**
      * @param EscrowableContract $escrowable
-     * @param CustomerContract   $escrowable
-     * @param ProviderContract   $escrowable
+     * @param CustomerContract $customer
+     * @param ProviderContract $provider
      *
      * @return Escrow
      */

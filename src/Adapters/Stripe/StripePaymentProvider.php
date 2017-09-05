@@ -2,14 +2,12 @@
 
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
-use Makeable\LaravelEscrow\Contracts\ChargeContract as Charge;
 use Makeable\LaravelEscrow\Contracts\CustomerContract as Customer;
 use Makeable\LaravelEscrow\Contracts\PaymentProviderContract as PaymentProvider;
 use Makeable\LaravelEscrow\Contracts\ProviderContract as Provider;
-use Makeable\LaravelEscrow\Contracts\TransferContract as Transfer;
 use Makeable\ValueObjects\Amount\Amount;
-use Stripe\Charge as StripeCharge;
-use Stripe\Transfer as StripeTransfer;
+use Stripe\Charge;
+use Stripe\Transfer;
 
 class StripePaymentProvider implements PaymentProvider
 {
@@ -28,10 +26,10 @@ class StripePaymentProvider implements PaymentProvider
 
     /**
      * @param Customer $customer
-     * @param Amount   $amount
-     * @param null     $reference
+     * @param Amount $amount
+     * @param null $reference
      *
-     * @return Charge
+     * @return StripeCharge
      */
     public function charge($customer, $amount, $reference = null)
     {
@@ -46,17 +44,15 @@ class StripePaymentProvider implements PaymentProvider
             $options['transfer_group'] = $reference;
         }
 
-        return app()->make(Charge::class, [
-            StripeCharge::create($options),
-        ]);
+        return app()->make(StripeCharge::class, [Charge::create($options)]);
     }
 
     /**
      * @param Provider $provider
-     * @param Amount   $amount
-     * @param null     $reference
+     * @param Amount $amount
+     * @param null $reference
      *
-     * @return Transfer
+     * @return StripeTransfer
      */
     public function pay($provider, $amount, $reference = null)
     {
@@ -71,8 +67,6 @@ class StripePaymentProvider implements PaymentProvider
             $options['transfer_group'] = $reference;
         }
 
-        return app()->make(Transfer::class, [
-            StripeTransfer::create($options),
-        ]);
+        return app()->make(StripeTransfer::class, [Transfer::create($options),]);
     }
 }

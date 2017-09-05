@@ -2,8 +2,10 @@
 
 namespace Makeable\LaravelEscrow;
 
+use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
 use Makeable\LaravelEscrow\Contracts\EscrowRepositoryContract as EscrowRepository;
+use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
@@ -11,12 +13,17 @@ use Makeable\LaravelEscrow\Interactions\ChargeCustomerDeposit;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
 use Makeable\ValueObjects\Amount\Amount;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Escrow extends \Illuminate\Database\Eloquent\Model
+class Escrow extends Eloquent
 {
     use Transactable;
 
     /**
+     * @param EscrowableContract $escrowable
+     * @param CustomerContract $customer
+     * @param ProviderContract $provider
+     *
      * @return Escrow
      */
     public static function init(...$args)
@@ -45,7 +52,7 @@ class Escrow extends \Illuminate\Database\Eloquent\Model
      */
     public function getTransferGroupAttribute()
     {
-        return class_basename($this)."#{$this->id}";
+        return class_basename($this) . "#{$this->id}";
     }
 
     /**
@@ -126,6 +133,6 @@ class Escrow extends \Illuminate\Database\Eloquent\Model
             ? $this->escrowable->escrowPolicy
             : EscrowPolicy::class;
 
-        return Interact::call($policy.'@'.$action, $this, ...$args);
+        return Interact::call($policy . '@' . $action, $this, ...$args);
     }
 }

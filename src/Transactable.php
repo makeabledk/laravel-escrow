@@ -2,13 +2,12 @@
 
 namespace Makeable\LaravelEscrow;
 
-use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
 use Makeable\ValueObjects\Amount\Amount;
 
 trait Transactable
 {
     /**
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function deposits()
     {
@@ -24,7 +23,7 @@ trait Transactable
     }
 
     /**
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function withdrawals()
     {

@@ -2,9 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Contracts;
 
-use Makeable\ValueObjects\Amount\Amount;
-
-interface ChargeContract
+interface MorphableContract
 {
     /**
      * @param $id
@@ -14,17 +12,7 @@ interface ChargeContract
     public static function findOrFail($id);
 
     /**
-     * @return Amount
-     */
-    public function getAmount();
-
-    /**
      * @return mixed
      */
     public function getKey();
-
-    /**
-     * @return ChargeContract
-     */
-    public function refund();
 }

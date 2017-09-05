@@ -2,25 +2,25 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
-use Makeable\LaravelEscrow\Contracts\ChargeContract as Charge;
-use Makeable\LaravelEscrow\Contracts\EloquentContract;
-use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
+use Makeable\LaravelEscrow\Contracts\TransferContract as Charge;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Events\EscrowFunded;
+use Makeable\LaravelEscrow\Transaction;
 
 class CreateEscrowDeposit
 {
     /**
-     * @param Escrow           $escrow
-     * @param EloquentContract $source
-     * @param Charge           $charge
+     * @param Escrow $escrow
+     * @param Eloquent $source
+     * @param Charge $charge
      */
     public function handle($escrow, $source, $charge)
     {
         $transaction = tap(app(Transaction::class))
             ->setAmount($charge->getAmount())
-            ->setCharge($charge)
+            ->setTransfer($charge)
             ->setSource($source)
             ->setDestination($escrow)
             ->save();

@@ -26,8 +26,6 @@ class EscrowRepository implements EscrowRepositoryContract
             'customer_id' => $customer->getKey(),
             'provider_type' => $provider->getMorphClass(),
             'provider_id' => $provider->getKey(),
-//            'deposit_amount' => ($deposit = $escrowable->getDepositAmount())->get(),
-//            'currency' => $deposit->currency()->getCode(),
             'status' => null,
         ]);
     }

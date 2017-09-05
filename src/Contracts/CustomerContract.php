@@ -2,23 +2,6 @@
 
 namespace Makeable\LaravelEscrow\Contracts;
 
-interface CustomerContract extends EloquentContract
+interface CustomerContract extends MorphableContract, TransactableContract
 {
-    /**
-     * @param string $token
-     * @param array  $options
-     *
-     * @return \Stripe\Customer
-     */
-    public function createAsStripeCustomer();
-
-    /**
-     * @param int   $amount
-     * @param array $options
-     *
-     * @return \Stripe\Charge
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function charge($amount, $options);
 }

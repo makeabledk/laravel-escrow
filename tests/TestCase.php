@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
-use Makeable\LaravelEscrow\Contracts\TransactionContract;
 use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
 use Makeable\LaravelEscrow\Transaction;
@@ -43,7 +42,6 @@ class TestCase extends BaseTestCase
 
         $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
         $app->register(EscrowServiceProvider::class);
-        $app->bind(TransactionContract::class, Transaction::class);
 
         return $app;
     }

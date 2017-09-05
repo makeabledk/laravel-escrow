@@ -3,7 +3,6 @@
 namespace Makeable\LaravelEscrow\Tests\Fakes;
 
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
-use Makeable\LaravelEscrow\Contracts\TransactionContract;
 use Makeable\LaravelEscrow\EscrowPolicy;
 
 class PassingProductEscrowPolicy //extends EscrowPolicy

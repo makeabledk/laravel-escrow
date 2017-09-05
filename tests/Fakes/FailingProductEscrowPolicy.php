@@ -3,8 +3,8 @@
 namespace Makeable\LaravelEscrow\Tests\Fakes;
 
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
-use Makeable\LaravelEscrow\Contracts\TransactionContract;
 use Makeable\LaravelEscrow\EscrowPolicy;
+use Makeable\LaravelEscrow\Transaction;
 
 class FailingProductEscrowPolicy extends EscrowPolicy
 {
@@ -19,10 +19,9 @@ class FailingProductEscrowPolicy extends EscrowPolicy
 
     /**
      * @param EscrowableContract $escrowable
-     * @param TransactionContract $transaction
      * @return bool
      */
-    public function deposit($escrowable, $transaction)
+    public function deposit($escrowable)
     {
         return false;
     }

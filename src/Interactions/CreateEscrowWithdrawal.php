@@ -2,24 +2,24 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
-use Makeable\LaravelEscrow\Contracts\EloquentContract;
-use Makeable\LaravelEscrow\Contracts\TransactionContract as Transaction;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Makeable\LaravelEscrow\Contracts\TransferContract as Transfer;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowWithdrawn;
+use Makeable\LaravelEscrow\Transaction;
 
 class CreateEscrowWithdrawal
 {
     /**
-     * @param Escrow           $escrow
-     * @param EloquentContract $destination
-     * @param Transfer         $transfer
+     * @param Escrow $escrow
+     * @param Eloquent $destination
+     * @param Transfer $transfer
      */
     public function handle($escrow, $destination, $transfer)
     {
         $transaction = tap(app(Transaction::class))
             ->setAmount($transfer->getAmount())
-            ->setCharge($transfer)
+            ->setTransfer($transfer)
             ->setSource($escrow)
             ->setDestination($destination)
             ->save();

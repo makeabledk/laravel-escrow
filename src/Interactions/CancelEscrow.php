@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
+use Illuminate\Support\Collection;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowCancelled;
 

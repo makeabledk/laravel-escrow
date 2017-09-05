@@ -4,15 +4,8 @@ namespace Makeable\LaravelEscrow\Contracts;
 
 use Makeable\ValueObjects\Amount\Amount;
 
-interface TransferContract
+interface TransferContract extends MorphableContract
 {
-    /**
-     * @param $id
-     *
-     * @return mixed
-     */
-    public static function findOrFail($id);
-
     /**
      * @return Amount
      */

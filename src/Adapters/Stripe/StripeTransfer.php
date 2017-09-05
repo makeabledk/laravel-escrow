@@ -20,7 +20,7 @@ class StripeTransfer implements TransferContract
     protected $object;
 
     /**
-     ´    * @param Transfer $object
+     * @param Transfer $object
      */
     public function __construct($object)
     {
