@@ -12,7 +12,7 @@ class EscrowReleased
     /**
      * @var Escrow
      */
-    protected $escrow;
+    public $escrow;
 
     /**
      * @param Escrow $escrow

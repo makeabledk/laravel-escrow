@@ -12,7 +12,7 @@ class EscrowFunded
     /**
      * @var Escrow
      */
-    protected $escrow;
+    public $escrow;
 
     /**
      * @param Escrow $escrow

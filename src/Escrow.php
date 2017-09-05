@@ -14,7 +14,7 @@ use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
 use Makeable\LaravelEscrow\Interactions\ChargeCustomerDeposit;
-use Makeable\LaravelEscrow\Interactions\DepositToEscrow;
+use Makeable\LaravelEscrow\Interactions\CreateEscrowDeposit;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
 use Makeable\ValueObjects\Amount\Amount;
@@ -45,6 +45,14 @@ class Escrow extends \Illuminate\Database\Eloquent\Model
     public function getDepositAmountAttribute()
     {
         return new Amount($this->attributes['deposit_amount'], $this->deposit_currency);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransferGroupAttribute()
+    {
+        return class_basename($this)."#{$this->id}";
     }
 
     /**

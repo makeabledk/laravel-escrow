@@ -2,7 +2,6 @@
 
 namespace Makeable\LaravelEscrow;
 
-use Makeable\LaravelEscrow\Contracts\TransactionContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 
@@ -21,15 +20,6 @@ class EscrowPolicy
     }
 
     /**
-     * @param Escrow $escrow
-     * @return bool
-     */
-    public function cancelled($escrow)
-    {
-        return true;
-    }
-
-    /**
      * @param Escrow  $escrow
      * @return bool
      */
@@ -37,26 +27,6 @@ class EscrowPolicy
     {
         throw_if($escrow->status !== null, IllegalEscrowAction::class);
 
-        return true;
-    }
-
-    /**
-     * @param Escrow  $escrow
-     * @param TransactionContract $transaction
-     *
-     * @return bool
-     */
-    public function deposited($escrow, $transaction)
-    {
-        return true;
-    }
-
-    /**
-     * @param Escrow $escrow
-     * @return bool
-     */
-    public function funded($escrow)
-    {
         return true;
     }
 
@@ -69,15 +39,6 @@ class EscrowPolicy
         throw_if($escrow->status !== null, IllegalEscrowAction::class);
         throw_unless($escrow->isFunded(), InsufficientFunds::class);
 
-        return true;
-    }
-
-    /**
-     * @param Escrow $escrow
-     * @return bool
-     */
-    public function released($escrow)
-    {
         return true;
     }
 }

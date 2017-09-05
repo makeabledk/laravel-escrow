@@ -6,7 +6,7 @@ use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Transaction;
 
-class EscrowDeposited
+class EscrowWithdrawn
 {
     use SerializesModels;
 

@@ -17,7 +17,7 @@ class ChargeCustomerDeposit
         $amount = $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance());
 
         if ($amount->gt(Amount::zero())) {
-            Interact::call(DepositToEscrow::class, $escrow, $provider->charge($escrow->customer, $amount));
+            Interact::call(CreateEscrowDeposit::class, $escrow, $escrow->customer, $provider->charge($escrow->customer, $amount, $escrow->transfer_group));
         }
     }
 }

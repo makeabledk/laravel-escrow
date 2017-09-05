@@ -12,7 +12,7 @@ class EscrowCancelled
     /**
      * @var Escrow
      */
-    protected $escrow;
+    public $escrow;
 
     /**
      * @param Escrow $escrow
