@@ -2,13 +2,12 @@
 
 namespace Makeable\LaravelEscrow\Tests;
 
-use DB;
 use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Support\Facades\Artisan;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransfer;
+use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
-use Makeable\LaravelEscrow\Tests\Fakes\Product;
 use Makeable\LaravelEscrow\Transaction;
 use Makeable\ValueObjects\Amount\Amount;
 use Makeable\ValueObjects\Amount\TestCurrency;
@@ -21,7 +20,11 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->setUpDatabase($this->app);
+        $this->setUpFactories($this->app);
+
+        if(property_exists($this, 'migrateDatabase')) {
+            $this->artisan('migrate');
+        }
 
         // Put Amount in test mode so we don't need a currency implementation
         Amount::test();
@@ -35,13 +38,18 @@ class TestCase extends BaseTestCase
     public function createApplication()
     {
         putenv('APP_ENV=testing');
+        putenv('APP_DEBUG=true');
         putenv('DB_CONNECTION=sqlite');
         putenv('DB_DATABASE=:memory:');
 
         $app = require __DIR__.'/../vendor/laravel/laravel/bootstrap/app.php';
 
+        $app->useEnvironmentPath(__DIR__.'/..');
         $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
         $app->register(EscrowServiceProvider::class);
+        $app->afterResolving('migrator', function ($migrator) {
+            $migrator->path(__DIR__.'/migrations/');
+        });
 
         return $app;
     }
@@ -49,27 +57,23 @@ class TestCase extends BaseTestCase
     /**
      * @param \Illuminate\Foundation\Application $app
      */
-    protected function setUpDatabase($app)
+    protected function setUpFactories($app)
     {
-        DB::connection()->getSchemaBuilder()->create('products', function (Blueprint $table) {
-            $table->increments('id');
-        });
-
-        // Create escrows table
-        Artisan::call('vendor:publish', ['--tag' => 'migrations', '--provider' => EscrowServiceProvider::class]);
-        Artisan::call('migrate');
-
-        $app->make(Factory::class)->define(Product::class, function ($faker) {
-            return [];
-        });
         $app->make(Factory::class)->define(Transaction::class, function ($faker) {
             return [
                 'source_type' => 'foo',
                 'source_id' => 1,
                 'destination_type' => 'bar',
                 'destination_id' => 1,
+                'transfer_type' => array_random([StripeCharge::class, StripeTransfer::class]),
+                'amount' => rand(100, 1000),
                 'currency_code' => array_rand(TestCurrency::$currencies)
             ];
         });
+    }
+
+    protected function interact($class, ...$args)
+    {
+        return Interact::call($class, ...$args);
     }
 }

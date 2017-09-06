@@ -54,7 +54,8 @@ class StripeTransfer implements TransferContract
      */
     public function getAmount()
     {
-        // TODO handle refund amounts
+        // TODO handle (partial) refund amounts?
+
         return new Amount($this->object->amount, $this->object->currency);
     }
 

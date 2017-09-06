@@ -6,6 +6,11 @@ use Makeable\ValueObjects\Amount\Amount;
 
 trait Transactable
 {
+
+    public function deposit($transaction)
+    {
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
@@ -20,6 +25,10 @@ trait Transactable
     public function getBalance()
     {
         return Amount::sum($this->deposits, 'amount')->subtract(Amount::sum($this->withdrawals, 'amount'));
+    }
+
+    public function withdraw($transaction)
+    {
     }
 
     /**

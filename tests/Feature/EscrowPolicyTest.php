@@ -8,10 +8,10 @@ use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Tests\Fakes\PassingProductEscrowPolicy;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
 use Makeable\LaravelEscrow\Transaction;
-use Makeable\LaravelEscrow\Tests\TestCase;
+use Makeable\LaravelEscrow\Tests\TestCaseOrchestra;
 use Mockery;
 
-class EscrowPolicyTest extends TestCase
+class EscrowPolicyTest extends TestCaseOrchestra
 {
     private function escrow(&$policy)
     {

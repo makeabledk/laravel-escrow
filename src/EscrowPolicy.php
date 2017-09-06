@@ -2,11 +2,25 @@
 
 namespace Makeable\LaravelEscrow;
 
+use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 
-class EscrowPolicy
+class EscrowPolicy implements EscrowPolicyContract
 {
+    /**
+     * @param $action
+     * @param Escrow $escrow
+     *
+     * @throws IllegalEscrowAction
+     */
+    public function check($action, $escrow)
+    {
+        if (! (new static)->$action($escrow)) {
+            throw new IllegalEscrowAction($action);
+        }
+    }
+
     /**
      * @param Escrow $escrow
      *

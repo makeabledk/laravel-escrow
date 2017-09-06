@@ -12,6 +12,7 @@ class CreateEscrowsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('escrows', function (Blueprint $table) {
             $table->increments('id');
             $table->string('escrowable_type');
