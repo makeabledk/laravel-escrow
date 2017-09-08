@@ -2,7 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
-use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract;
+use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract as EscrowPolicy;
 use Makeable\LaravelEscrow\Contracts\PaymentProviderContract as PaymentProvider;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\ValueObjects\Amount\Amount;
@@ -15,7 +15,7 @@ class ChargeCustomerDeposit
      */
     public function handle($escrow, PaymentProvider $provider)
     {
-        app(EscrowPolicyContract::class)->check('deposit', $escrow);
+        app(EscrowPolicy::class)->check('chargeDeposit', $escrow);
 
         $amount = $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance());
 

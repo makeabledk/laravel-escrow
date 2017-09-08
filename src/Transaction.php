@@ -35,7 +35,7 @@ class Transaction extends Eloquent
             ->setAmount($this->amount)
             ->setDestination($this->source)
             ->setSource($this->destination)
-            ->setTransfer($this->transfer->refund())
+            ->setTransfer(optional($this->transfer)->refund())
             ->save();
     }
 
@@ -54,7 +54,7 @@ class Transaction extends Eloquent
      */
     public function getTransferAttribute()
     {
-        return call_user_func([$this->transfer_type, 'findOrFail'], $this->transfer_id);
+        return $this->transfer_type ? call_user_func([$this->transfer_type, 'findOrFail'], $this->transfer_id) : null;
     }
 
     /**
@@ -103,9 +103,9 @@ class Transaction extends Eloquent
      */
     public function setTransfer($transfer)
     {
-        return $this->forceFill([
+        return $transfer ? $this->forceFill([
             'transfer_type' => get_class($transfer),
             'transfer_id' => $transfer->getKey(),
-        ]);
+        ]) : $this;
     }
 }

@@ -13,9 +13,9 @@ class CreateEscrowWithdrawal
     /**
      * @param Escrow $escrow
      * @param Eloquent $destination
-     * @param Transfer $transfer
+     * @param Transfer|null $transfer
      */
-    public function handle($escrow, $destination, $transfer)
+    public function handle($escrow, $destination, $transfer = null)
     {
         $transaction = tap(app(Transaction::class))
             ->setAmount($transfer->getAmount())

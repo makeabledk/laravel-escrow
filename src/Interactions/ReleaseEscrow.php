@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
+use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract as EscrowPolicy;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 
@@ -12,6 +13,8 @@ class ReleaseEscrow
      */
     public function handle($escrow)
     {
+        app(EscrowPolicy::class)->check('release', $escrow);
+
         Interact::call(ChargeCustomerRemaining::class, $escrow);
         Interact::call(PayProvider::class, $escrow);
 

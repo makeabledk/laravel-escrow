@@ -8,9 +8,12 @@
     },
     "require": {
         "php": ">=7.0.0",
-        "laravel/framework": "5.5",
+        "illuminate/support": "^5.5",
+        "illuminate/database": "^5.5",
+        "illuminate/events": "^5.5",
         "makeabledk/php-value-objects": "dev-master",
-        "makeabledk/laravel-eloquent-status": "^0.1"
+        "makeabledk/laravel-eloquent-status": "^0.1",
+        "stripe/stripe-php": "~5.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.3",

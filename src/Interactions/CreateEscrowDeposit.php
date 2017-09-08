@@ -14,9 +14,9 @@ class CreateEscrowDeposit
     /**
      * @param Escrow $escrow
      * @param Eloquent $source
-     * @param Charge $charge
+     * @param Charge|null $charge
      */
-    public function handle($escrow, $source, $charge)
+    public function handle($escrow, $source, $charge = null)
     {
         $transaction = tap(app(Transaction::class))
             ->setAmount($charge->getAmount())

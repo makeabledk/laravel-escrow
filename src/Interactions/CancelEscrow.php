@@ -2,7 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
-use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract;
+use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract as EscrowPolicy;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowCancelled;
 
@@ -13,7 +13,7 @@ class CancelEscrow
      */
     public function handle($escrow)
     {
-        app(EscrowPolicyContract::class)->check('cancel', $escrow);
+        app(EscrowPolicy::class)->check('cancel', $escrow);
 
         $escrow->deposits->each->refund();
 
