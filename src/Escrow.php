@@ -13,6 +13,7 @@ use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
 use Makeable\LaravelEscrow\Interactions\ChargeCustomerDeposit;
+use Makeable\LaravelEscrow\Interactions\CommitEscrow;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
 use Makeable\ValueObjects\Amount\Amount;
@@ -21,18 +22,6 @@ class Escrow extends Eloquent
 {
     use HasStatus,
         Transactable;
-//
-//    /**
-//     * @param EscrowableContract $escrowable
-//     * @param CustomerContract $customer
-//     * @param ProviderContract $provider
-//     *
-//     * @return Escrow
-//     */
-//    public static function init(...$args)
-//    {
-//        return app(EscrowRepository::class)->create(...$args);
-//    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -80,9 +69,9 @@ class Escrow extends Eloquent
     /**
      * @return Escrow
      */
-    public function chargeDeposit()
+    public function commit()
     {
-        Interact::call(ChargeCustomerDeposit::class, $this);
+        Interact::call(CommitEscrow::class, $this);
 
         return $this;
     }

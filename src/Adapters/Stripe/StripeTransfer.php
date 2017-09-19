@@ -3,11 +3,12 @@
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Makeable\LaravelEscrow\Contracts\TransferContract;
+use Makeable\LaravelEscrow\Contracts\TransactionSourceContract;
+use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
 use Makeable\ValueObjects\Amount\Amount;
 use Stripe\Transfer;
 
-class StripeTransfer implements TransferContract
+class StripeTransfer implements TransferSourceContract
 {
     /**
      * @var mixed

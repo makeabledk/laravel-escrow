@@ -5,7 +5,7 @@ namespace Makeable\LaravelEscrow\Tests;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
-use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransfer;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransactionSource;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
 use Makeable\LaravelEscrow\Transaction;
@@ -65,7 +65,7 @@ class TestCase extends BaseTestCase
                 'source_id' => 1,
                 'destination_type' => 'bar',
                 'destination_id' => 1,
-                'transfer_type' => array_random([StripeCharge::class, StripeTransfer::class]),
+                'transfer_type' => array_random([StripeCharge::class, StripeTransactionSource::class]),
                 'amount' => rand(100, 1000),
                 'currency_code' => array_rand(TestCurrency::$currencies)
             ];

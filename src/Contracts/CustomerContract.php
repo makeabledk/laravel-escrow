@@ -2,6 +2,6 @@
 
 namespace Makeable\LaravelEscrow\Contracts;
 
-interface CustomerContract extends MorphableContract, TransactableContract
+interface CustomerContract extends TransactableContract
 {
 }

@@ -27,6 +27,6 @@ class EscrowDeposited
     public function __construct($escrow, $transaction)
     {
         $this->escrow = $escrow;
-        $this->$transaction = $transaction;
+        $this->transaction = $transaction;
     }
 }

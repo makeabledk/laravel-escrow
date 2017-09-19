@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 
-class ReleaseEscrow
+class CommitEscrow
 {
     /**
      * @param Escrow $escrow
@@ -15,7 +15,7 @@ class ReleaseEscrow
     {
         $escrow->policy()->check('commit', $escrow);
 
-        Interact::call(ChargeCustomer::class, $escrow, $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance()));
+        Interact::call(ChargeEscrowDeposit::class, $escrow, $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance()));
 
         $escrow->committed_at = Carbon::now()->toDateTimeString();
         $escrow->save();

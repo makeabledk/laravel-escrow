@@ -3,11 +3,34 @@
 namespace Makeable\LaravelEscrow;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Makeable\LaravelEscrow\Contracts\TransferContract;
 use Makeable\ValueObjects\Amount\Amount;
 
 class Transaction extends Eloquent
 {
+    /**
+     * Refund the transfer and create a reversed transaction.
+     *
+     * @return Transaction
+     */
+    public function refund()
+    {
+        return tap(new static)
+            ->setAmount($this->getAmount())
+            ->setDestination(tap($this->source)->refund()) // something needs to change here - could be either a transactable or charge
+            ->setSource(tap($this->destination)->refund())
+            ->save();
+    }
+
+    // _________________________________________________________________________________________________________________
+
+    /**
+     * @return Amount
+     */
+    public function getAmount()
+    {
+        return new Amount($this->attributes['amount'], $this->currency);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
@@ -22,39 +45,6 @@ class Transaction extends Eloquent
     public function source()
     {
         return $this->morphTo();
-    }
-
-    /**
-     * Refund the transfer and create a reversed transaction.
-     *
-     * @return Transaction
-     */
-    public function refund()
-    {
-        return tap(new static())
-            ->setAmount($this->amount)
-            ->setDestination($this->source)
-            ->setSource($this->destination)
-            ->setTransfer(optional($this->transfer)->refund())
-            ->save();
-    }
-
-    // _________________________________________________________________________________________________________________
-
-    /**
-     * @return Amount
-     */
-    public function getAmountAttribute()
-    {
-        return new Amount($this->attributes['amount'], $this->currency);
-    }
-
-    /**
-     * @return TransferContract
-     */
-    public function getTransferAttribute()
-    {
-        return $this->transfer_type ? call_user_func([$this->transfer_type, 'findOrFail'], $this->transfer_id) : null;
     }
 
     /**
@@ -96,16 +86,13 @@ class Transaction extends Eloquent
         ]);
     }
 
+    // _________________________________________________________________________________________________________________
+
     /**
-     * @param TransferContract $transfer
-     *
-     * @return $this
+     * @return Amount
      */
-    public function setTransfer($transfer)
+    public function getAmountAttribute()
     {
-        return $transfer ? $this->forceFill([
-            'transfer_type' => get_class($transfer),
-            'transfer_id' => $transfer->getKey(),
-        ]) : $this;
+        return $this->getAmount();
     }
 }

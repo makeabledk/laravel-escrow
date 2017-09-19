@@ -15,8 +15,8 @@ class ReleaseEscrow
     {
         $escrow->policy()->check('release', $escrow);
 
-        Interact::call(ChargeCustomer::class, $escrow, $escrow->escrowable->getCustomerAmount()->subtract($escrow->getBalance()));
-        Interact::call(PayProvider::class, $escrow);
+        Interact::call(ChargeEscrowDeposit::class, $escrow, $escrow->escrowable->getCustomerAmount()->subtract($escrow->getBalance()));
+        Interact::call(PayEscrowProvider::class, $escrow, $escrow->escrowable->getProviderAmount());
 
         $escrow->released_at = Carbon::now()->toDateTimeString();
         $escrow->save();
