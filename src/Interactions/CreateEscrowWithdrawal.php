@@ -11,8 +11,8 @@ use Makeable\LaravelEscrow\Transaction;
 class CreateEscrowWithdrawal
 {
     /**
-     * @param Escrow $escrow
-     * @param Eloquent $destination
+     * @param Escrow        $escrow
+     * @param Eloquent      $destination
      * @param Transfer|null $transfer
      */
     public function handle($escrow, $destination, $transfer = null)

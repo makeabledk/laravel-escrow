@@ -2,9 +2,9 @@
 
 namespace Makeable\LaravelEscrow;
 
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Makeable\LaravelEscrow\Contracts\TransferContract;
 use Makeable\ValueObjects\Amount\Amount;
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Transaction extends Eloquent
 {

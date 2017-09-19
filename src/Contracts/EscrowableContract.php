@@ -5,7 +5,7 @@ namespace Makeable\LaravelEscrow\Contracts;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Makeable\ValueObjects\Amount\Amount;
 
-interface EscrowableContract
+interface EscrowableContract extends TransactableContract
 {
     /**
      * @return BelongsTo

@@ -17,7 +17,7 @@ class EscrowRepository implements EscrowRepositoryContract
      *
      * @return Escrow
      */
-    public function create($escrowable, $customer, $provider)
+    public function create(EscrowableContract $escrowable, CustomerContract $customer, ProviderContract $provider)
     {
         return app(Escrow::class)->forceCreate([
             'escrowable_type' => $escrowable->getMorphClass(),

@@ -10,24 +10,28 @@ interface EscrowPolicyContract
     /**
      * @param $action
      * @param $escrow
+     *
      * @throws IllegalEscrowAction
      */
     public function check($action, $escrow);
 
     /**
      * @param Escrow $escrow
+     *
      * @return bool
      */
     public function cancel($escrow);
 
     /**
      * @param Escrow $escrow
+     *
      * @return bool
      */
-    public function deposit($escrow);
+    public function commit($escrow);
 
     /**
      * @param Escrow $escrow
+     *
      * @return bool
      */
     public function release($escrow);

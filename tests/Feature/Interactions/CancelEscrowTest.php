@@ -26,7 +26,7 @@ class CancelEscrowTest extends DatabaseTestCase
     {
         Event::fake();
 
-        $this->escrow->forceUpdate(['status' => 1t]);
+        $this->escrow->forceUpdate(['status' => 1]);
 
         Event::assertNotDispatched(EscrowCancelled::class);
     }

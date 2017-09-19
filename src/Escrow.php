@@ -2,8 +2,11 @@
 
 namespace Makeable\LaravelEscrow;
 
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Makeable\EloquentStatus\HasStatus;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
+use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract as EscrowPolicy;
 use Makeable\LaravelEscrow\Contracts\EscrowRepositoryContract as EscrowRepository;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
@@ -13,23 +16,23 @@ use Makeable\LaravelEscrow\Interactions\ChargeCustomerDeposit;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
 use Makeable\ValueObjects\Amount\Amount;
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Escrow extends Eloquent
 {
-    use Transactable;
-
-    /**
-     * @param EscrowableContract $escrowable
-     * @param CustomerContract $customer
-     * @param ProviderContract $provider
-     *
-     * @return Escrow
-     */
-    public static function init(...$args)
-    {
-        return app(EscrowRepository::class)->create(...$args);
-    }
+    use HasStatus,
+        Transactable;
+//
+//    /**
+//     * @param EscrowableContract $escrowable
+//     * @param CustomerContract $customer
+//     * @param ProviderContract $provider
+//     *
+//     * @return Escrow
+//     */
+//    public static function init(...$args)
+//    {
+//        return app(EscrowRepository::class)->create(...$args);
+//    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -40,27 +43,11 @@ class Escrow extends Eloquent
     }
 
     /**
-     * @return Amount
+     * @return EscrowPolicy
      */
-    public function getDepositAmountAttribute()
+    public function policy()
     {
-        return new Amount($this->attributes['deposit_amount'], $this->deposit_currency);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTransferGroupAttribute()
-    {
-        return class_basename($this) . "#{$this->id}";
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isFunded()
-    {
-        return $this->getBalance()->gte($this->deposit_amount);
+        return app(EscrowPolicy::class);
     }
 
     /**
@@ -85,9 +72,7 @@ class Escrow extends Eloquent
      */
     public function cancel()
     {
-        if ($this->checkPolicy('cancel')) {
-            Interact::call(CancelEscrow::class, $this);
-        }
+        Interact::call(CancelEscrow::class, $this);
 
         return $this;
     }
@@ -97,11 +82,17 @@ class Escrow extends Eloquent
      */
     public function chargeDeposit()
     {
-        if ($this->checkPolicy('deposit')) {
-            Interact::call(ChargeCustomerDeposit::class, $this);
-        }
+        Interact::call(ChargeCustomerDeposit::class, $this);
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isFunded()
+    {
+        return $this->getBalance()->gte($this->deposit_amount);
     }
 
     /**
@@ -112,9 +103,7 @@ class Escrow extends Eloquent
      */
     public function release()
     {
-        if ($this->checkPolicy('release')) {
-            Interact::call(ReleaseEscrow::class, $this);
-        }
+        Interact::call(ReleaseEscrow::class, $this);
 
         return $this;
     }
@@ -122,17 +111,18 @@ class Escrow extends Eloquent
     // _________________________________________________________________________________________________________________
 
     /**
-     * @param $action
-     * @param array $args
-     *
-     * @return bool
+     * @return Amount
      */
-    protected function checkPolicy($action, ...$args)
+    public function getDepositAmountAttribute()
     {
-        $policy = property_exists($this->escrowable, 'escrowPolicy')
-            ? $this->escrowable->escrowPolicy
-            : EscrowPolicy::class;
+        return new Amount($this->attributes['deposit_amount'], $this->deposit_currency);
+    }
 
-        return Interact::call($policy . '@' . $action, $this, ...$args);
+    /**
+     * @return string
+     */
+    public function getTransferGroupAttribute()
+    {
+        return class_basename($this)."#{$this->id}";
     }
 }

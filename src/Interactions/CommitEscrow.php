@@ -13,12 +13,11 @@ class ReleaseEscrow
      */
     public function handle($escrow)
     {
-        $escrow->policy()->check('release', $escrow);
+        $escrow->policy()->check('commit', $escrow);
 
-        Interact::call(ChargeCustomer::class, $escrow, $escrow->escrowable->getCustomerAmount()->subtract($escrow->getBalance()));
-        Interact::call(PayProvider::class, $escrow);
+        Interact::call(ChargeCustomer::class, $escrow, $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance()));
 
-        $escrow->released_at = Carbon::now()->toDateTimeString();
+        $escrow->committed_at = Carbon::now()->toDateTimeString();
         $escrow->save();
 
         event(new EscrowReleased($escrow));

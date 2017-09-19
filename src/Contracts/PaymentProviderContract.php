@@ -8,7 +8,7 @@ interface PaymentProviderContract
 {
     /**
      * @param CustomerContract $customer
-     * @param Amount $amount
+     * @param Amount           $amount
      * @param $reference
      *
      * @return TransferContract
@@ -17,7 +17,7 @@ interface PaymentProviderContract
 
     /**
      * @param ProviderContract $provider
-     * @param Amount $amount
+     * @param Amount           $amount
      * @param $reference
      *
      * @return TransferContract

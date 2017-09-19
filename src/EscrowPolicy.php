@@ -4,7 +4,6 @@ namespace Makeable\LaravelEscrow;
 
 use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 
 class EscrowPolicy implements EscrowPolicyContract
 {
@@ -16,7 +15,7 @@ class EscrowPolicy implements EscrowPolicyContract
      */
     public function check($action, $escrow)
     {
-        if (! (new static)->$action($escrow)) {
+        if (!(new static())->$action($escrow)) {
             throw new IllegalEscrowAction($action);
         }
     }
@@ -28,8 +27,7 @@ class EscrowPolicy implements EscrowPolicyContract
      */
     public function cancel($escrow)
     {
-        throw_if($escrow->status !== null, IllegalEscrowAction::class);
-        throw_if($escrow->withdrawals()->count(), IllegalEscrowAction::class, 'Cannot cancel escrow that has withdrawals');
+        throw_unless($escrow->checkStatus(new EscrowStatus('committed')), IllegalEscrowAction::class);
 
         return true;
     }
@@ -39,9 +37,9 @@ class EscrowPolicy implements EscrowPolicyContract
      *
      * @return bool
      */
-    public function deposit($escrow)
+    public function commit($escrow)
     {
-        throw_if($escrow->status !== null, IllegalEscrowAction::class);
+        throw_unless($escrow->checkStatus(new EscrowStatus('open')), IllegalEscrowAction::class);
 
         return true;
     }
@@ -53,8 +51,7 @@ class EscrowPolicy implements EscrowPolicyContract
      */
     public function release($escrow)
     {
-        throw_if($escrow->status !== null, IllegalEscrowAction::class);
-        throw_unless($escrow->isFunded(), InsufficientFunds::class);
+        throw_unless($escrow->checkStatus(new EscrowStatus('committed')), IllegalEscrowAction::class);
 
         return true;
     }

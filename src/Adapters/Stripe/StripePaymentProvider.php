@@ -26,8 +26,8 @@ class StripePaymentProvider implements PaymentProvider
 
     /**
      * @param Customer $customer
-     * @param Amount $amount
-     * @param null $reference
+     * @param Amount   $amount
+     * @param null     $reference
      *
      * @return StripeCharge
      */
@@ -49,8 +49,8 @@ class StripePaymentProvider implements PaymentProvider
 
     /**
      * @param Provider $provider
-     * @param Amount $amount
-     * @param null $reference
+     * @param Amount   $amount
+     * @param null     $reference
      *
      * @return StripeTransfer
      */
@@ -67,6 +67,6 @@ class StripePaymentProvider implements PaymentProvider
             $options['transfer_group'] = $reference;
         }
 
-        return app()->make(StripeTransfer::class, [Transfer::create($options),]);
+        return app()->make(StripeTransfer::class, [Transfer::create($options)]);
     }
 }
