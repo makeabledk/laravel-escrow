@@ -6,10 +6,11 @@ use Makeable\LaravelEscrow\Contracts\PaymentProviderContract as PaymentProvider;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Events\EscrowFunded;
+use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Transfer;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 
-class ChargeEscrowDeposit
+class DepositEscrow
 {
     /**
      * @param Escrow $escrow
@@ -18,10 +19,12 @@ class ChargeEscrowDeposit
      */
     public function handle($escrow, $amount, PaymentProvider $gateway)
     {
+        throw_unless(in_array($escrow->status->get(), ['open', 'committed']), IllegalEscrowAction::class);
+
         if ($amount->gt(Amount::zero())) {
-            $transaction = $escrow->deposit($amount, tap(new Transfer)
+            $transaction = $escrow->deposit($amount, tap((new Transfer)
                 ->setAmount($amount)
-                ->setSource($gateway->charge($escrow->customer, $amount, $escrow->transfer_group))
+                ->setSource($gateway->charge($escrow->customer, $amount, $escrow->transfer_group)))
                 ->save()
             );
 

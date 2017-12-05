@@ -3,33 +3,15 @@
 namespace Makeable\LaravelEscrow;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelCurrencies\Amount;
 
-class Transaction extends Eloquent
+class Transaction extends Eloquent implements RefundableContract
 {
     /**
-     * Refund the transfer and create a reversed transaction.
-     *
-     * @return Transaction
+     * @var array
      */
-    public function refund()
-    {
-        return tap(new static)
-            ->setAmount($this->getAmount())
-            ->setDestination(tap($this->source)->refund()) // something needs to change here - could be either a transactable or charge
-            ->setSource(tap($this->destination)->refund())
-            ->save();
-    }
-
-    // _________________________________________________________________________________________________________________
-
-    /**
-     * @return Amount
-     */
-    public function getAmount()
-    {
-        return new Amount($this->attributes['amount'], $this->currency);
-    }
+    protected $guarded = [];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -45,6 +27,48 @@ class Transaction extends Eloquent
     public function source()
     {
         return $this->morphTo();
+    }
+
+    // _________________________________________________________________________________________________________________
+
+    /**
+     * @return Amount
+     */
+    public function getAmount()
+    {
+        return new Amount($this->attributes['amount'], $this->currency);
+    }
+
+    /**
+     * Refund the transfer and create a reversed transaction.
+     *
+     * @return Transaction
+     */
+    public function refund()
+    {
+        if ($this->is_refund) {
+            throw new \BadMethodCallException('Cannot refund an already refunded transaction');
+        }
+
+        return tap((new static)
+            ->fill(['is_refund' => 1])
+            ->setAmount($this->getAmount())
+            ->setDestination($this->triggerRefund($this->source))
+            ->setSource($this->triggerRefund($this->destination)))
+            ->save();
+    }
+
+    /**
+     * @param $refundable
+     * @return mixed
+     */
+    protected function triggerRefund($refundable)
+    {
+        $contracts = class_implements(get_class($refundable));
+
+        return in_array(RefundableContract::class, $contracts)
+            ? $refundable->refund()
+            : $refundable;
     }
 
     /**
@@ -74,7 +98,7 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Eloquent $source
+     * @param RefundableContract $source
      *
      * @return $this
      */
@@ -84,15 +108,5 @@ class Transaction extends Eloquent
             'source_type' => $source->getMorphClass(),
             'source_id' => $source->getKey(),
         ]);
-    }
-
-    // _________________________________________________________________________________________________________________
-
-    /**
-     * @return Amount
-     */
-    public function getAmountAttribute()
-    {
-        return $this->getAmount();
     }
 }

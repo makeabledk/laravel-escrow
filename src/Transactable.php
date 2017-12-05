@@ -3,7 +3,8 @@
 namespace Makeable\LaravelEscrow;
 
 use Makeable\LaravelEscrow\Contracts\TransactionSourceContract;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelCurrencies\Amount;
 
 trait Transactable
 {

@@ -16,12 +16,14 @@ class CreateTransfersTable extends Migration
             $table->increments('id');
             $table->string('source_type');
             $table->integer('source_id');
+            $table->text('source_data')->nullable();
 //            $table->string('destination_type');
 //            $table->integer('destination_id');
 //            $table->string('transfer_type');
 //            $table->string('transfer_id');
             $table->decimal('amount');
             $table->string('currency_code');
+            $table->boolean('is_refund')->default(0);
             $table->timestamps();
 
             $table->index(['source_type', 'source_id']);

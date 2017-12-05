@@ -5,11 +5,13 @@ namespace Makeable\LaravelEscrow\Tests;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
-use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransactionSource;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransfer;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
+use Makeable\LaravelEscrow\Tests\Fakes\Customer;
+use Makeable\LaravelEscrow\Tests\Fakes\Provider;
 use Makeable\LaravelEscrow\Transaction;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 use Makeable\ValueObjects\Amount\TestCurrency;
 
 class TestCase extends BaseTestCase
@@ -65,9 +67,25 @@ class TestCase extends BaseTestCase
                 'source_id' => 1,
                 'destination_type' => 'bar',
                 'destination_id' => 1,
-                'transfer_type' => array_random([StripeCharge::class, StripeTransactionSource::class]),
+                'transfer_type' => array_random([StripeCharge::class, StripeTransfer::class]),
                 'amount' => rand(100, 1000),
                 'currency_code' => array_rand(TestCurrency::$currencies)
+            ];
+        });
+
+        $app->make(Factory::class)->define(Customer::class, function ($faker) {
+            return [
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'password' => bcrypt('foo')
+            ];
+        });
+
+        $app->make(Factory::class)->define(Provider::class, function ($faker) {
+            return [
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'password' => bcrypt('foo')
             ];
         });
     }

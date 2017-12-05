@@ -4,7 +4,9 @@ namespace Makeable\LaravelEscrow\Interactions;
 
 use Carbon\Carbon;
 use Makeable\LaravelEscrow\Escrow;
+use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
+use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 
 class CommitEscrow
 {
@@ -13,11 +15,11 @@ class CommitEscrow
      */
     public function handle($escrow)
     {
-        $escrow->policy()->check('commit', $escrow);
+        throw_unless($escrow->checkStatus(new EscrowStatus('open')), IllegalEscrowAction::class);
 
-        Interact::call(ChargeEscrowDeposit::class, $escrow, $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance()));
+        Interact::call(DepositEscrow::class, $escrow, $escrow->escrowable->getDepositAmount()->subtract($escrow->getBalance()));
 
-        $escrow->committed_at = Carbon::now()->toDateTimeString();
+        $escrow->committed_at = now();
         $escrow->save();
 
         event(new EscrowReleased($escrow));

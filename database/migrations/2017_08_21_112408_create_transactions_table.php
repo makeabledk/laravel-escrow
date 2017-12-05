@@ -22,6 +22,7 @@ class CreateTransactionsTable extends Migration
 //            $table->string('transfer_id');
             $table->decimal('amount');
             $table->string('currency_code');
+            $table->boolean('is_refund')->default(0);
             $table->timestamps();
 
             $table->index(['source_type', 'source_id']);

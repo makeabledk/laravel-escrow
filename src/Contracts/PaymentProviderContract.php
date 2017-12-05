@@ -2,7 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Contracts;
 
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 
 interface PaymentProviderContract
 {
@@ -11,7 +11,7 @@ interface PaymentProviderContract
      * @param Amount           $amount
      * @param $reference
      *
-     * @return TransferSourceContract
+     * @return RefundableContract
      */
     public function charge($customer, $amount, $reference = null);
 
@@ -20,7 +20,7 @@ interface PaymentProviderContract
      * @param Amount           $amount
      * @param $reference
      *
-     * @return TransferSourceContract
+     * @return RefundableContract
      */
     public function pay($provider, $amount, $reference = null);
 }

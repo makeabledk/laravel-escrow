@@ -3,11 +3,25 @@
 namespace Makeable\LaravelEscrow;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelEscrow\Contracts\TransactionSourceContract;
 use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 
-class Transfer extends Eloquent
+class Transfer extends Eloquent implements RefundableContract
 {
+    /**
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'source_data' => 'array'
+    ];
+
     /**
      * Refund the transfer and create a reversed transaction.
      *
@@ -15,13 +29,26 @@ class Transfer extends Eloquent
      */
     public function refund()
     {
+        if ($this->is_refund) {
+            throw new \BadMethodCallException('Cannot perform refund on a refunded transfer');
+        }
+
         return tap(new static)
-            ->setAmount($this->amount)
+            ->fill(['is_refund' => 1])
+            ->setAmount($this->getAmount())
             ->setSource($this->source->refund())
             ->save();
     }
 
     // _________________________________________________________________________________________________________________
+
+    /**
+     * @return Amount
+     */
+    public function getAmount()
+    {
+        return new Amount($this->attributes['amount'], $this->currency);
+    }
 
     /**
      * @param Amount $amount
@@ -30,7 +57,7 @@ class Transfer extends Eloquent
      */
     public function setAmount($amount)
     {
-        return $this->forceFill([
+        return $this->fill([
             'amount' => $amount->get(),
             'currency' => $amount->currency()->getCode(),
         ]);
@@ -41,26 +68,19 @@ class Transfer extends Eloquent
      *
      * @return $this
      */
-    public function setSource($transfer)
+    public function setSource(TransferSourceContract $source)
     {
-        return $transfer ? $this->forceFill([
-            'transfer_type' => get_class($transfer),
-            'transfer_id' => $transfer->getKey(),
-        ]) : $this;
+        return $this->fill([
+            'transfer_type' => get_class($source),
+            'transfer_id' => $source->getKey(),
+            'transfer_data' => $source->toArray()
+        ]);
     }
 
     // _________________________________________________________________________________________________________________
 
     /**
-     * @return Amount
-     */
-    public function getAmountAttribute()
-    {
-        return new Amount($this->attributes['amount'], $this->currency);
-    }
-
-    /**
-     * @return TransferSourceContract
+     * @return RefundableContract
      */
     public function getSourceAttribute()
     {

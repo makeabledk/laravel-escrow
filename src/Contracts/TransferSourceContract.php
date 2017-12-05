@@ -2,9 +2,9 @@
 
 namespace Makeable\LaravelEscrow\Contracts;
 
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 
-interface TransferSourceContract
+interface TransferSourceContract extends RefundableContract
 {
     /**
      * @param $id
@@ -24,7 +24,7 @@ interface TransferSourceContract
     public function getKey();
 
     /**
-     * @return TransferSourceContract
+     * @return array
      */
-    public function refund();
+    public function toArray();
 }

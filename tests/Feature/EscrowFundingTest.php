@@ -14,12 +14,15 @@ use Makeable\LaravelEscrow\Transaction;
 
 class EscrowFundingTest extends DatabaseTestCase
 {
-    public function test_it_inits_with_a_product()
+
+    /** @test **/
+    function it_can_hold_funds()
     {
-        $this->assertTrue($this->escrow instanceof Escrow);
+        $this->escrow->deposit(new Amount(100), )
     }
 
-    public function test_balance_consists_of_deposits_and_transactions()
+    /** @test */
+    public function balance_consists_of_deposits_and_withdrawals()
     {
         $withdrawal = factory(Transaction::class)->make();
         $deposit = factory(Transaction::class)->make();
@@ -30,43 +33,43 @@ class EscrowFundingTest extends DatabaseTestCase
         $this->assertTrue($this->escrow->getBalance()->equals($deposit->amount->subtract($withdrawal->amount)));
     }
 
-    public function test_it_cannot_be_release_until_funded()
-    {
-        $escrow = $this->escrow(); // deposit fund 760 DKK
-
-        // No funds
-        $this->expectException(InsufficientFunds::class);
-        $escrow->release();
-
-        // 750 DKK
-        $escrow->deposit(factory(Transaction::class)->make(['amount' => 100, 'currency' => 'EUR']));
-        $this->expectException(InsufficientFunds::class);
-        $escrow->release();
-
-        // 760 DKK
-        $escrow->deposit(factory(Transaction::class)->make(['amount' => 10, 'currency' => 'DKK']));
-        $escrow->release();
-
-        $this->assertEquals(1, $escrow->status);
-    }
-
-    public function test_it_can_hold_more_funds_than_required()
-    {
-        $escrow = $this->escrow(); // deposit fund 760 DKK
-        $escrow->deposit(factory(Transaction::class)->make(['amount' => 1000, 'currency' => 'DKK']));
-        $escrow->release();
-    }
-
-    public function test_it_can_only_release_or_cancel_when_open()
-    {
-        $escrow = $this->escrow();
-        $escrow->status = 1;
-        $escrow->save();
-
-        $this->expectException(IllegalEscrowAction::class);
-        $escrow->cancel();
-
-        $this->expectException(IllegalEscrowAction::class);
-        $escrow->release();
-    }
+//    public function test_it_cannot_be_released_until_funded()
+//    {
+//        $escrow = $this->escrow(); // deposit fund 760 DKK
+//
+//        // No funds
+//        $this->expectException(InsufficientFunds::class);
+//        $escrow->release();
+//
+//        // 750 DKK
+//        $escrow->deposit(factory(Transaction::class)->make(['amount' => 100, 'currency' => 'EUR']));
+//        $this->expectException(InsufficientFunds::class);
+//        $escrow->release();
+//
+//        // 760 DKK
+//        $escrow->deposit(factory(Transaction::class)->make(['amount' => 10, 'currency' => 'DKK']));
+//        $escrow->release();
+//
+//        $this->assertEquals(1, $escrow->status);
+//    }
+//
+//    public function test_it_can_hold_more_funds_than_required()
+//    {
+//        $escrow = $this->escrow(); // deposit fund 760 DKK
+//        $escrow->deposit(factory(Transaction::class)->make(['amount' => 1000, 'currency' => 'DKK']));
+//        $escrow->release();
+//    }
+//
+//    public function test_it_can_only_release_or_cancel_when_open()
+//    {
+//        $escrow = $this->escrow();
+//        $escrow->status = 1;
+//        $escrow->save();
+//
+//        $this->expectException(IllegalEscrowAction::class);
+//        $escrow->cancel();
+//
+//        $this->expectException(IllegalEscrowAction::class);
+//        $escrow->release();
+//    }
 }

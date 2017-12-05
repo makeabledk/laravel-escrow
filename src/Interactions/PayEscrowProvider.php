@@ -6,7 +6,7 @@ use Makeable\LaravelEscrow\Contracts\PaymentProviderContract as PaymentProvider;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowWithdrawn;
 use Makeable\LaravelEscrow\Transfer;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 
 class PayEscrowProvider
 {
@@ -18,9 +18,9 @@ class PayEscrowProvider
     public function handle($escrow, $amount, PaymentProvider $gateway)
     {
         if ($amount->gt(Amount::zero())) {
-            $transaction = $escrow->withdraw($amount, tap(new Transfer)
+            $transaction = $escrow->withdraw($amount, tap((new Transfer)
                 ->setAmount($amount)
-                ->setSource($gateway->pay($escrow->provider, $amount, $escrow->transfer_group))
+                ->setSource($gateway->pay($escrow->provider, $amount, $escrow->transfer_group)))
                 ->save()
             );
 

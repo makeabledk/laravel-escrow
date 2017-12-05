@@ -3,35 +3,14 @@
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Makeable\LaravelEscrow\Contracts\TransactionSourceContract;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 use Stripe\Transfer;
+use Stripe\TransferReversal;
 
-class StripeTransfer implements TransferSourceContract
+class StripeTransfer extends StripeObject
 {
-    /**
-     * @var mixed
-     */
-    protected $id;
-
-    /**
-     * @var Transfer
-     */
-    protected $object;
-
-    /**
-     * @param Transfer $object
-     */
-    public function __construct($object)
-    {
-        if (!$object instanceof Transfer) {
-            throw new ModelNotFoundException();
-        }
-        $this->id = $object->id;
-        $this->object = $object;
-    }
-
     /**
      * @param $id
      *
@@ -43,28 +22,10 @@ class StripeTransfer implements TransferSourceContract
     }
 
     /**
-     * @return mixed
-     */
-    public function getKey()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Amount
-     */
-    public function getAmount()
-    {
-        // TODO handle (partial) refund amounts?
-
-        return new Amount($this->object->amount, $this->object->currency);
-    }
-
-    /**
      * @return StripeTransfer
      */
     public function refund()
     {
-        return new static($this->object->refund());
+        return new static($this->object->reverse());
     }
 }

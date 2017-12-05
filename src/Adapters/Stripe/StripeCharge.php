@@ -2,36 +2,10 @@
 
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Makeable\LaravelEscrow\Contracts\TransactionSourceContract;
-use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
-use Makeable\ValueObjects\Amount\Amount;
 use Stripe\Charge;
 
-class StripeCharge implements TransferSourceContract
+class StripeCharge extends StripeObject
 {
-    /**
-     * @var mixed
-     */
-    protected $id;
-
-    /**
-     * @var Charge
-     */
-    protected $object;
-
-    /**
-     * @param Charge $object
-     */
-    public function __construct($object)
-    {
-        if (!$object instanceof Charge) {
-            throw new ModelNotFoundException();
-        }
-        $this->id = $object->id;
-        $this->object = $object;
-    }
-
     /**
      * @param $id
      *
@@ -40,23 +14,6 @@ class StripeCharge implements TransferSourceContract
     public static function findOrFail($id)
     {
         return new static(Charge::retrieve($id));
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getKey()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Amount
-     */
-    public function getAmount()
-    {
-        // TODO handle (partial) refund amounts?
-        return new Amount($this->object->amount, $this->object->currency);
     }
 
     /**

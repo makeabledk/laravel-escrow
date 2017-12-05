@@ -2,9 +2,10 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
-use Carbon\Carbon;
 use Makeable\LaravelEscrow\Escrow;
+use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
+use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 
 class ReleaseEscrow
 {
@@ -13,12 +14,12 @@ class ReleaseEscrow
      */
     public function handle($escrow)
     {
-        $escrow->policy()->check('release', $escrow);
+        throw_unless($escrow->checkStatus(new EscrowStatus('committed')), IllegalEscrowAction::class);
 
-        Interact::call(ChargeEscrowDeposit::class, $escrow, $escrow->escrowable->getCustomerAmount()->subtract($escrow->getBalance()));
+        Interact::call(DepositEscrow::class, $escrow, $escrow->escrowable->getCustomerAmount()->subtract($escrow->getBalance()));
         Interact::call(PayEscrowProvider::class, $escrow, $escrow->escrowable->getProviderAmount());
 
-        $escrow->released_at = Carbon::now()->toDateTimeString();
+        $escrow->released_at = now();
         $escrow->save();
 
         event(new EscrowReleased($escrow));

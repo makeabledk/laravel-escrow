@@ -2,7 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Contracts;
 
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 
 interface TransactableContract
 {

@@ -6,22 +6,32 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Makeable\EloquentStatus\HasStatus;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
-use Makeable\LaravelEscrow\Contracts\EscrowPolicyContract as EscrowPolicy;
-use Makeable\LaravelEscrow\Contracts\EscrowRepositoryContract as EscrowRepository;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
-use Makeable\LaravelEscrow\Interactions\ChargeCustomerDeposit;
 use Makeable\LaravelEscrow\Interactions\CommitEscrow;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
-use Makeable\ValueObjects\Amount\Amount;
+use Makeable\LaravelCurrencies\Amount;
 
 class Escrow extends Eloquent
 {
     use HasStatus,
         Transactable;
+
+    /**
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function customer()
+    {
+        return $this->morphTo();
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -32,11 +42,26 @@ class Escrow extends Eloquent
     }
 
     /**
-     * @return EscrowPolicy
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function policy()
+    public function provider()
     {
-        return app(EscrowPolicy::class);
+        return $this->morphTo();
+    }
+
+    // _________________________________________________________________________________________________________________
+
+    /**
+     * @param $query
+     * @param CustomerContract $customer
+     *
+     * @return mixed
+     */
+    public function scopeCustomer($query, $customer)
+    {
+        return $query
+            ->where('customer_type', $customer->getMorphClass())
+            ->where('customer_id', $customer->getKey());
     }
 
     /**
@@ -50,6 +75,19 @@ class Escrow extends Eloquent
         return $query
             ->where('escrowable_type', $escrowable->getMorphClass())
             ->where('escrowable_id', $escrowable->getKey());
+    }
+
+    /**
+     * @param $query
+     * @param ProviderContract $provider
+     *
+     * @return mixed
+     */
+    public function scopeProvider($query, $provider)
+    {
+        return $query
+            ->where('provider_type', $provider->getMorphClass())
+            ->where('provider_id', $provider->getKey());
     }
 
     // _________________________________________________________________________________________________________________
@@ -100,11 +138,11 @@ class Escrow extends Eloquent
     // _________________________________________________________________________________________________________________
 
     /**
-     * @return Amount
+     * @return \Makeable\EloquentStatus\Status
      */
-    public function getDepositAmountAttribute()
+    public function getStatusAttribute()
     {
-        return new Amount($this->attributes['deposit_amount'], $this->deposit_currency);
+        return EscrowStatus::guess($this);
     }
 
     /**

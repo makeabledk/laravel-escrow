@@ -4,7 +4,9 @@ namespace Makeable\LaravelEscrow\Interactions;
 
 use Carbon\Carbon;
 use Makeable\LaravelEscrow\Escrow;
+use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowCancelled;
+use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 
 class CancelEscrow
 {
@@ -13,11 +15,11 @@ class CancelEscrow
      */
     public function handle($escrow)
     {
-        $escrow->policy()->check('cancel', $escrow);
+        throw_unless($escrow->checkStatus(new EscrowStatus('committed')), IllegalEscrowAction::class);
 
         $escrow->deposits->each->refund();
 
-        $escrow->cancelled_at = Carbon::now()->toDateTimeString();
+        $escrow->cancelled_at = now();
         $escrow->save();
 
         event(new EscrowCancelled($escrow));
