@@ -3,8 +3,8 @@
 namespace Makeable\LaravelEscrow\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Makeable\LaravelEscrow\Adapters\Stripe\StripePaymentProvider;
-use Makeable\LaravelEscrow\Contracts\PaymentProviderContract;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripePaymentGateway;
+use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 
 class EscrowServiceProvider extends ServiceProvider
 {
@@ -15,8 +15,8 @@ class EscrowServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(PaymentProviderContract::class, function () {
-            return new StripePaymentProvider(config('services.stripe.secret'));
+        $this->app->singleton(PaymentGatewayContract::class, function () {
+            return new StripePaymentGateway(config('services.stripe.secret'));
         });
     }
 }

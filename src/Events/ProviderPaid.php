@@ -3,9 +3,7 @@
 namespace Makeable\LaravelEscrow\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
-use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Transaction;
 
 class ProviderPaid
@@ -24,7 +22,7 @@ class ProviderPaid
 
     /**
      * @param ProviderContract $provider
-     * @param Transaction $transaction
+     * @param Transaction      $transaction
      */
     public function __construct($provider, $transaction)
     {

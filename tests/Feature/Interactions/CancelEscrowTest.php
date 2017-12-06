@@ -9,25 +9,25 @@ use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 
 class CancelEscrowTest extends DatabaseTestCase
 {
-    /** @test **/
-    public function it_fires_escrow_cancelled_event()
-    {
-        Event::fake();
-
-        $this->interact(CancelEscrow::class, $this->escrow);
-
-        Event::assertDispatched(EscrowCancelled::class, function ($event) {
-            return $event->escrow->id === $this->escrow->id;
-        });
-    }
-
-    /** @test **/
-    function it_()
-    {
-        Event::fake();
-
-        $this->escrow->forceUpdate(['status' => 1]);
-
-        Event::assertNotDispatched(EscrowCancelled::class);
-    }
+//    /** @test **/
+//    public function it_fires_escrow_cancelled_event()
+//    {
+//        Event::fake();
+//
+//        $this->interact(CancelEscrow::class, $this->escrow);
+//
+//        Event::assertDispatched(EscrowCancelled::class, function ($event) {
+//            return $event->escrow->id === $this->escrow->id;
+//        });
+//    }
+//
+//    /** @test **/
+//    function it_()
+//    {
+//        Event::fake();
+//
+//        $this->escrow->forceUpdate(['status' => 1]);
+//
+//        Event::assertNotDispatched(EscrowCancelled::class);
+//    }
 }

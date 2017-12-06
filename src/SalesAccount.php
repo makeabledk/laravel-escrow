@@ -4,5 +4,4 @@ namespace Makeable\LaravelEscrow;
 
 interface SalesAccount
 {
-
 }

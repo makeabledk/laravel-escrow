@@ -6,13 +6,17 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
 use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransfer;
+use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
+use Makeable\LaravelEscrow\SalesAccount;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
+use Makeable\LaravelEscrow\Tests\Fakes\PaymentGateway;
 use Makeable\LaravelEscrow\Tests\Fakes\Provider;
+use Makeable\LaravelEscrow\Transactable;
 use Makeable\LaravelEscrow\Transaction;
 use Makeable\LaravelCurrencies\Amount;
-use Makeable\ValueObjects\Amount\TestCurrency;
+use Makeable\LaravelEscrow\Transfer;
 
 class TestCase extends BaseTestCase
 {
@@ -27,6 +31,17 @@ class TestCase extends BaseTestCase
         if(property_exists($this, 'migrateDatabase')) {
             $this->artisan('migrate');
         }
+
+        // Bind a dummy sales account
+        app()->singleton(SalesAccount::class, function () {
+            return new (new class() {
+                use Transactable;
+            });
+        });
+
+        app()->singleton(PaymentGatewayContract::class, function () {
+            return new PaymentGateway();
+        });
 
         // Put Amount in test mode so we don't need a currency implementation
         Amount::test();
@@ -67,9 +82,17 @@ class TestCase extends BaseTestCase
                 'source_id' => 1,
                 'destination_type' => 'bar',
                 'destination_id' => 1,
-                'transfer_type' => array_random([StripeCharge::class, StripeTransfer::class]),
                 'amount' => rand(100, 1000),
-                'currency_code' => array_rand(TestCurrency::$currencies)
+                'currency_code' => 'DKK',
+            ];
+        });
+
+        $app->make(Factory::class)->define(Transfer::class, function ($faker) {
+            return [
+                'source_type' => 'foo',
+                'source_id' => 1,
+                'amount' => rand(100, 1000),
+                'currency_code' => 'DKK',
             ];
         });
 

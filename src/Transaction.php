@@ -5,7 +5,6 @@ namespace Makeable\LaravelEscrow;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
-use Makeable\LaravelEscrow\Contracts\TransactableContract;
 
 class Transaction extends Eloquent implements RefundableContract
 {
@@ -96,6 +95,14 @@ class Transaction extends Eloquent implements RefundableContract
             'source_type' => $source->getMorphClass(),
             'source_id' => $source->getKey(),
         ]);
+    }
+
+    /**
+     * @return Amount
+     */
+    public function getAmountAttribute()
+    {
+        return $this->getAmount();
     }
 
     /**

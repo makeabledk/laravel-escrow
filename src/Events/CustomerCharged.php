@@ -4,7 +4,6 @@ namespace Makeable\LaravelEscrow\Events;
 
 use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
-use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Transaction;
 
 class CustomerCharged
@@ -22,8 +21,8 @@ class CustomerCharged
     public $transaction;
 
     /**
-     * @param CustomerContract      $customer
-     * @param Transaction $transaction
+     * @param CustomerContract $customer
+     * @param Transaction      $transaction
      */
     public function __construct($customer, $transaction)
     {

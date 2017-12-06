@@ -3,13 +3,13 @@
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
 use Makeable\LaravelCurrencies\Amount;
-use Makeable\LaravelEscrow\Contracts\CustomerContract as Customer;
-use Makeable\LaravelEscrow\Contracts\PaymentProviderContract as PaymentProvider;
-use Makeable\LaravelEscrow\Contracts\ProviderContract as Provider;
+use Makeable\LaravelEscrow\Contracts\CustomerContract;
+use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
+use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Stripe\Charge;
 use Stripe\Transfer;
 
-class StripePaymentProvider implements PaymentProvider
+class StripePaymentGateway implements PaymentGatewayContract
 {
     /**
      * @var mixed
@@ -25,9 +25,9 @@ class StripePaymentProvider implements PaymentProvider
     }
 
     /**
-     * @param Customer $customer
-     * @param Amount   $amount
-     * @param null     $reference
+     * @param CustomerContract $customer
+     * @param Amount           $amount
+     * @param null             $reference
      *
      * @return StripeCharge
      */
@@ -48,9 +48,9 @@ class StripePaymentProvider implements PaymentProvider
     }
 
     /**
-     * @param Provider $provider
-     * @param Amount   $amount
-     * @param null     $reference
+     * @param ProviderContract $provider
+     * @param Amount           $amount
+     * @param null             $reference
      *
      * @return StripeTransfer
      */

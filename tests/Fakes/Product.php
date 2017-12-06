@@ -21,7 +21,7 @@ class Product extends \Illuminate\Database\Eloquent\Model implements EscrowableC
      */
     public function getDepositAmount()
     {
-        return new Amount(250, 'DKK'); // often the deposit will be the platforms' fee
+        return new Amount(250); // often the deposit will be the platforms' fee
     }
 
     /**
@@ -29,7 +29,7 @@ class Product extends \Illuminate\Database\Eloquent\Model implements EscrowableC
      */
     public function getCustomerAmount()
     {
-        return new Amount(1000, 'DKK');
+        return new Amount(1000);
     }
 
     /**
@@ -37,6 +37,6 @@ class Product extends \Illuminate\Database\Eloquent\Model implements EscrowableC
      */
     public function getProviderAmount()
     {
-        return new Amount(750, 'DKK');
+        return new Amount(750);
     }
 }

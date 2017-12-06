@@ -3,12 +3,11 @@
 namespace Makeable\LaravelEscrow;
 
 use Makeable\LaravelCurrencies\Amount;
-use Makeable\LaravelEscrow\Contracts\TransactableContract;
 
 trait Transactable
 {
     /**
-     * @param Amount                    $amount
+     * @param Amount $amount
      * @param $source
      *
      * @return Transaction

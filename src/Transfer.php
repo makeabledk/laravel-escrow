@@ -79,6 +79,14 @@ class Transfer extends Eloquent implements RefundableContract
     // _________________________________________________________________________________________________________________
 
     /**
+     * @return Amount
+     */
+    public function getAmountAttribute()
+    {
+        return $this->getAmount();
+    }
+
+    /**
      * @return RefundableContract
      */
     public function getSourceAttribute()

@@ -5,9 +5,7 @@ namespace Makeable\LaravelEscrow\Interactions;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
-use Makeable\LaravelEscrow\Events\SalesAccountDeposited;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\SalesAccount;
 
 class ReleaseEscrow
 {

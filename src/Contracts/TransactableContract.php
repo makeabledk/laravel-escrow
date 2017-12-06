@@ -10,6 +10,7 @@ interface TransactableContract
     /**
      * @param Amount $amount
      * @param $source
+     *
      * @return Transaction
      */
     public function deposit($amount, $source);
@@ -27,6 +28,7 @@ interface TransactableContract
     /**
      * @param Amount $amount
      * @param $destination
+     *
      * @return Transaction
      */
     public function withdraw($amount, $destination);

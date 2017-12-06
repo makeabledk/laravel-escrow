@@ -4,7 +4,7 @@ namespace Makeable\LaravelEscrow\Contracts;
 
 use Makeable\LaravelCurrencies\Amount;
 
-interface PaymentProviderContract
+interface PaymentGatewayContract
 {
     /**
      * @param CustomerContract $customer
