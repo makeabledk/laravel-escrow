@@ -2,12 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Makeable\LaravelEscrow\Contracts\RefundableContract;
-use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
-use Makeable\LaravelCurrencies\Amount;
 use Stripe\Transfer;
-use Stripe\TransferReversal;
 
 class StripeTransfer extends StripeObject
 {

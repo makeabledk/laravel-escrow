@@ -4,8 +4,8 @@ namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
 use BadMethodCallException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
 use Stripe\Charge;
 
 abstract class StripeObject implements TransferSourceContract
@@ -25,7 +25,7 @@ abstract class StripeObject implements TransferSourceContract
      */
     public function __construct($object)
     {
-        if (! $object instanceof \Stripe\StripeObject) {
+        if (!$object instanceof \Stripe\StripeObject) {
             throw new ModelNotFoundException();
         }
         $this->id = $object->id;

@@ -2,7 +2,6 @@
 
 namespace Makeable\LaravelEscrow\Interactions;
 
-use Carbon\Carbon;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowReleased;

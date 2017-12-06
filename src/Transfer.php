@@ -3,10 +3,9 @@
 namespace Makeable\LaravelEscrow;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Makeable\LaravelEscrow\Contracts\RefundableContract;
-use Makeable\LaravelEscrow\Contracts\TransactionSourceContract;
-use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
 
 class Transfer extends Eloquent implements RefundableContract
 {
@@ -19,7 +18,7 @@ class Transfer extends Eloquent implements RefundableContract
      * @var array
      */
     protected $casts = [
-        'source_data' => 'array'
+        'source_data' => 'array',
     ];
 
     /**
@@ -33,7 +32,7 @@ class Transfer extends Eloquent implements RefundableContract
             throw new \BadMethodCallException('Cannot perform refund on a refunded transfer');
         }
 
-        return tap(new static)
+        return tap(new static())
             ->fill(['is_refund' => 1])
             ->setAmount($this->getAmount())
             ->setSource($this->source->refund())
@@ -64,7 +63,7 @@ class Transfer extends Eloquent implements RefundableContract
     }
 
     /**
-     * @param TransferSourceContract $transfer
+     * @param TransferSourceContract $source
      *
      * @return $this
      */
@@ -73,7 +72,7 @@ class Transfer extends Eloquent implements RefundableContract
         return $this->fill([
             'transfer_type' => get_class($source),
             'transfer_id' => $source->getKey(),
-            'transfer_data' => $source->toArray()
+            'transfer_data' => $source->toArray(),
         ]);
     }
 

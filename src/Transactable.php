@@ -2,15 +2,15 @@
 
 namespace Makeable\LaravelEscrow;
 
-use Makeable\LaravelEscrow\Contracts\TransactionSourceContract;
-use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Contracts\TransactableContract;
 
 trait Transactable
 {
     /**
-     * @param Amount $amount
-     * @param TransactionSourceContract $source
+     * @param Amount                    $amount
+     * @param $source
+     *
      * @return Transaction
      */
     public function deposit($amount, $source)
@@ -41,6 +41,7 @@ trait Transactable
     /**
      * @param Amount $amount
      * @param $destination
+     *
      * @return Transaction
      */
     public function withdraw($amount, $destination)

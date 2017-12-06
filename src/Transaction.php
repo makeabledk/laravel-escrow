@@ -3,8 +3,9 @@
 namespace Makeable\LaravelEscrow;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelEscrow\Contracts\TransactableContract;
 
 class Transaction extends Eloquent implements RefundableContract
 {
@@ -50,25 +51,12 @@ class Transaction extends Eloquent implements RefundableContract
             throw new \BadMethodCallException('Cannot refund an already refunded transaction');
         }
 
-        return tap((new static)
+        return tap((new static())
             ->fill(['is_refund' => 1])
             ->setAmount($this->getAmount())
             ->setDestination($this->triggerRefund($this->source))
             ->setSource($this->triggerRefund($this->destination)))
             ->save();
-    }
-
-    /**
-     * @param $refundable
-     * @return mixed
-     */
-    protected function triggerRefund($refundable)
-    {
-        $contracts = class_implements(get_class($refundable));
-
-        return in_array(RefundableContract::class, $contracts)
-            ? $refundable->refund()
-            : $refundable;
     }
 
     /**
@@ -98,7 +86,7 @@ class Transaction extends Eloquent implements RefundableContract
     }
 
     /**
-     * @param RefundableContract $source
+     * @param Eloquent $source
      *
      * @return $this
      */
@@ -108,5 +96,19 @@ class Transaction extends Eloquent implements RefundableContract
             'source_type' => $source->getMorphClass(),
             'source_id' => $source->getKey(),
         ]);
+    }
+
+    /**
+     * @param $refundable
+     *
+     * @return mixed
+     */
+    protected function triggerRefund($refundable)
+    {
+        $contracts = class_implements(get_class($refundable));
+
+        return in_array(RefundableContract::class, $contracts)
+            ? $refundable->refund()
+            : $refundable;
     }
 }

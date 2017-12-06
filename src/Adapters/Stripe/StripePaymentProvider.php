@@ -2,10 +2,10 @@
 
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
+use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\CustomerContract as Customer;
 use Makeable\LaravelEscrow\Contracts\PaymentProviderContract as PaymentProvider;
 use Makeable\LaravelEscrow\Contracts\ProviderContract as Provider;
-use Makeable\LaravelCurrencies\Amount;
 use Stripe\Charge;
 use Stripe\Transfer;
 

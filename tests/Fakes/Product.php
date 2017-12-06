@@ -17,19 +17,6 @@ class Product extends \Illuminate\Database\Eloquent\Model implements EscrowableC
     protected $guarded = [];
 
     /**
-     * @var string
-     */
-    public static $escrowPolicy = PassingProductEscrowPolicy::class;
-
-    /**
-     * @return BelongsTo
-     */
-    public function customer()
-    {
-        // TODO: Implement customer() method.
-    }
-
-    /**
      * @return Amount
      */
     public function getDepositAmount()
@@ -51,13 +38,5 @@ class Product extends \Illuminate\Database\Eloquent\Model implements EscrowableC
     public function getProviderAmount()
     {
         return new Amount(750, 'DKK');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function provider()
-    {
-        // TODO: Implement provider() method.
     }
 }

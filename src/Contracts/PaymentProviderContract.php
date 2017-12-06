@@ -11,7 +11,7 @@ interface PaymentProviderContract
      * @param Amount           $amount
      * @param $reference
      *
-     * @return RefundableContract
+     * @return TransferSourceContract
      */
     public function charge($customer, $amount, $reference = null);
 
@@ -20,7 +20,7 @@ interface PaymentProviderContract
      * @param Amount           $amount
      * @param $reference
      *
-     * @return RefundableContract
+     * @return TransferSourceContract
      */
     public function pay($provider, $amount, $reference = null);
 }

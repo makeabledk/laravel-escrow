@@ -7,15 +7,15 @@ use Makeable\EloquentStatus\HasStatus;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
+use Makeable\LaravelEscrow\Contracts\TransactableContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
 use Makeable\LaravelEscrow\Interactions\CommitEscrow;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
-use Makeable\LaravelCurrencies\Amount;
 
-class Escrow extends Eloquent
+class Escrow extends Eloquent implements TransactableContract
 {
     use HasStatus,
         Transactable;

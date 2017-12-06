@@ -5,6 +5,7 @@ namespace Makeable\LaravelEscrow\Tests\Feature;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
@@ -12,13 +13,25 @@ use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
 use Makeable\LaravelEscrow\Transaction;
 
-class EscrowFundingTest extends DatabaseTestCase
+class TransactableTest extends DatabaseTestCase
 {
 
     /** @test **/
-    function it_can_hold_funds()
+    function it_can_deposit_funds()
     {
-        $this->escrow->deposit(new Amount(100), )
+        $this->escrow->deposit(new Amount(100), $this->customer);
+
+        $this->assertTrue($this->escrow->getBalance()->equals(new Amount(100)));
+        $this->assertTrue($this->customer->getBalance()->equals(new Amount(-100)));
+    }
+
+    /** @test **/
+    function it_can_withdraw_funds()
+    {
+        $this->customer->withdraw(new Amount(100), $this->escrow);
+
+        $this->assertTrue($this->escrow->getBalance()->equals(new Amount(100)));
+        $this->assertTrue($this->customer->getBalance()->equals(new Amount(-100)));
     }
 
     /** @test */
@@ -30,7 +43,9 @@ class EscrowFundingTest extends DatabaseTestCase
         $this->escrow->withdrawals()->save($withdrawal);
         $this->escrow->deposits()->save($deposit);
 
-        $this->assertTrue($this->escrow->getBalance()->equals($deposit->amount->subtract($withdrawal->amount)));
+        $this->assertTrue(
+            $this->escrow->getBalance()->equals($deposit->amount->subtract($withdrawal->amount))
+        );
     }
 
 //    public function test_it_cannot_be_released_until_funded()

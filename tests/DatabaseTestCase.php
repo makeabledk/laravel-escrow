@@ -5,7 +5,7 @@ namespace Makeable\LaravelEscrow\Tests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
-use Makeable\LaravelEscrow\Contracts\EscrowRepositoryContract;
+use Makeable\LaravelEscrow\Contracts\EscrowRepository;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
@@ -24,17 +24,17 @@ class DatabaseTestCase extends TestCase
     protected $escrow;
 
     /**
-     * @var EscrowableContract
+     * @var Product
      */
     protected $product;
 
     /**
-     * @var CustomerContract
+     * @var Customer
      */
     protected $customer;
 
     /**
-     * @var ProviderContract
+     * @var Provider
      */
     protected $provider;
 
@@ -43,7 +43,7 @@ class DatabaseTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->escrow = app(EscrowRepositoryContract::class)->create(
+        $this->escrow = app(EscrowRepository::class)->create(
             $this->product = Product::create([]),
             $this->customer = factory(Customer::class)->create(),
             $this->provider = factory(Provider::class)->create()
