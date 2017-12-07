@@ -67,7 +67,7 @@ class Transaction extends Eloquent implements RefundableContract
     {
         return $this->forceFill([
             'amount' => $amount->get(),
-            'currency' => $amount->currency()->getCode(),
+            'currency_code' => $amount->currency()->getCode(),
         ]);
     }
 

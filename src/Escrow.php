@@ -119,7 +119,7 @@ class Escrow extends Eloquent implements TransactableContract
      */
     public function isFunded()
     {
-        return $this->getBalance()->gte($this->deposit_amount);
+        return $this->getBalance()->gte($this->escrowable->getDepositAmount());
     }
 
     /**

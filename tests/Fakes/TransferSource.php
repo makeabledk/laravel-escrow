@@ -8,7 +8,6 @@ use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
 
 class TransferSource implements TransferSourceContract
 {
-
     /**
      * @return RefundableContract
      */

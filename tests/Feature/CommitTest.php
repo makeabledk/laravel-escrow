@@ -2,23 +2,15 @@
 
 namespace Makeable\LaravelEscrow\Tests\Feature;
 
-use App\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
-use Makeable\LaravelEscrow\Escrow;
-use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
-use Makeable\LaravelEscrow\Tests\Fakes\Product;
-use Makeable\LaravelEscrow\Transaction;
 use Makeable\LaravelEscrow\Transfer;
 
 class CommitTest extends DatabaseTestCase
 {
     /** @test **/
-    function it_charges_deposit_when_committing()
+    public function it_charges_deposit_when_committing()
     {
         $this->assertTrue($this->escrow->getBalance()->equals(Amount::zero()));
 
@@ -28,7 +20,7 @@ class CommitTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_tries_to_withdraw_from_customer_before_charging_the_customers_credit_card()
+    public function it_tries_to_withdraw_from_customer_before_charging_the_customers_credit_card()
     {
         $this->customer->deposit(new Amount(1000), factory(Transfer::class)->create());
 
@@ -43,7 +35,7 @@ class CommitTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_charges_customers_credit_card_when_insufficient_funds_available()
+    public function it_charges_customers_credit_card_when_insufficient_funds_available()
     {
         $this->customer->deposit(new Amount(100), factory(Transfer::class)->create());
 
@@ -55,7 +47,7 @@ class CommitTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_fails_to_commit_if_cant_charge_deposit()
+    public function it_fails_to_commit_if_cant_charge_deposit()
     {
         app(PaymentGatewayContract::class)->shouldFail();
 

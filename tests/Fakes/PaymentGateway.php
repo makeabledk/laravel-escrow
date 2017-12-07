@@ -17,7 +17,7 @@ class PaymentGateway implements PaymentGatewayContract
 
     /**
      * @param CustomerContract $customer
-     * @param Amount $amount
+     * @param Amount           $amount
      * @param $reference
      *
      * @return TransferSourceContract
@@ -29,7 +29,7 @@ class PaymentGateway implements PaymentGatewayContract
 
     /**
      * @param ProviderContract $provider
-     * @param Amount $amount
+     * @param Amount           $amount
      * @param $reference
      *
      * @return TransferSourceContract
@@ -39,9 +39,6 @@ class PaymentGateway implements PaymentGatewayContract
         return $this->handle();
     }
 
-    /**
-     * @return void
-     */
     public function shouldFail()
     {
         $this->shouldFail = true;
@@ -49,6 +46,7 @@ class PaymentGateway implements PaymentGatewayContract
 
     /**
      * @return TransferSource
+     *
      * @throws \Exception
      */
     protected function handle()

@@ -58,7 +58,7 @@ class Transfer extends Eloquent implements RefundableContract
     {
         return $this->fill([
             'amount' => $amount->get(),
-            'currency' => $amount->currency()->getCode(),
+            'currency_code' => $amount->currency()->getCode(),
         ]);
     }
 
@@ -70,9 +70,9 @@ class Transfer extends Eloquent implements RefundableContract
     public function setSource(TransferSourceContract $source)
     {
         return $this->fill([
-            'transfer_type' => get_class($source),
-            'transfer_id' => $source->getKey(),
-            'transfer_data' => $source->toArray(),
+            'source_id' => $source->getKey(),
+            'source_data' => $source->toArray(),
+            'source_type' => get_class($source),
         ]);
     }
 

@@ -2,41 +2,46 @@
 
 namespace Makeable\LaravelEscrow\Tests;
 
+use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
-use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransfer;
+use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Interactions\Interact;
 use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
-use Makeable\LaravelEscrow\SalesAccount;
+use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
 use Makeable\LaravelEscrow\Tests\Fakes\PaymentGateway;
 use Makeable\LaravelEscrow\Tests\Fakes\Provider;
 use Makeable\LaravelEscrow\Transactable;
 use Makeable\LaravelEscrow\Transaction;
-use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Transfer;
 
 class TestCase extends BaseTestCase
 {
-    /**
-     */
     public function setUp()
     {
         parent::setUp();
 
         $this->setUpFactories($this->app);
 
-        if(property_exists($this, 'migrateDatabase')) {
-            $this->artisan('migrate');
-        }
+//        if (property_exists($this, 'migrateDatabase')) {
+//            $this->artisan('migrate');
+//        }
 
         // Bind a dummy sales account
-        app()->singleton(SalesAccount::class, function () {
-            return new (new class() {
+        app()->singleton(SalesAccountContract::class, function () {
+            return new class() {
                 use Transactable;
-            });
+
+                public function getKey(){
+                    return rand();
+                }
+
+                public function getMorphClass(){
+                    return get_class($this);
+                }
+            };
         });
 
         app()->singleton(PaymentGatewayContract::class, function () {
@@ -83,7 +88,7 @@ class TestCase extends BaseTestCase
                 'destination_type' => 'bar',
                 'destination_id' => 1,
                 'amount' => rand(100, 1000),
-                'currency_code' => 'DKK',
+                'currency_code' => Amount::zero()->currency()->getCode(),
             ];
         });
 
@@ -92,7 +97,7 @@ class TestCase extends BaseTestCase
                 'source_type' => 'foo',
                 'source_id' => 1,
                 'amount' => rand(100, 1000),
-                'currency_code' => 'DKK',
+                'currency_code' => Amount::zero()->currency()->getCode(),
             ];
         });
 
@@ -100,7 +105,7 @@ class TestCase extends BaseTestCase
             return [
                 'name' => $faker->name,
                 'email' => $faker->email,
-                'password' => bcrypt('foo')
+                'password' => bcrypt('foo'),
             ];
         });
 
@@ -108,7 +113,7 @@ class TestCase extends BaseTestCase
             return [
                 'name' => $faker->name,
                 'email' => $faker->email,
-                'password' => bcrypt('foo')
+                'password' => bcrypt('foo'),
             ];
         });
     }

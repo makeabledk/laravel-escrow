@@ -2,10 +2,9 @@
 
 namespace Makeable\LaravelEscrow\Tests\Fakes;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
 use Makeable\LaravelEscrow\Escrowable;
-use Makeable\LaravelCurrencies\Amount;
 
 class Product extends \Illuminate\Database\Eloquent\Model implements EscrowableContract
 {

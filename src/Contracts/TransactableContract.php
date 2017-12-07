@@ -5,7 +5,7 @@ namespace Makeable\LaravelEscrow\Contracts;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Transaction;
 
-interface TransactableContract
+interface TransactableContract extends MorphableContract
 {
     /**
      * @param Amount $amount

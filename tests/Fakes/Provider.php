@@ -3,7 +3,6 @@
 namespace Makeable\LaravelEscrow\Tests\Fakes;
 
 use App\User;
-use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Transactable;
 
