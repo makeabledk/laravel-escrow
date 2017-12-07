@@ -53,9 +53,6 @@ class EscrowStatus extends Status
      */
     public function cancelled($query)
     {
-        return $query
-            ->whereNotNull('committed_at')
-            ->whereNull('released_at')
-            ->whereNotNull('cancelled_at');
+        return $query->whereNotNull('cancelled_at');
     }
 }

@@ -2,12 +2,15 @@
 
 namespace Makeable\LaravelEscrow\Tests\Feature;
 
+use Illuminate\Support\Facades\Event;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
+use Makeable\LaravelEscrow\Events\EscrowCommitted;
+use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Transfer;
 
-class CommitTest extends DatabaseTestCase
+class CommitEscrowTest extends DatabaseTestCase
 {
     /** @test **/
     public function it_charges_deposit_when_committing()
@@ -16,7 +19,7 @@ class CommitTest extends DatabaseTestCase
 
         $this->escrow->commit();
 
-        $this->assertTrue($this->escrow->getBalance()->equals($this->product->getDepositAmount()));
+        $this->assertEquals($this->product->getDepositAmount()->get(), $this->escrow->getBalance()->get());
     }
 
     /** @test **/
@@ -24,14 +27,14 @@ class CommitTest extends DatabaseTestCase
     {
         $this->customer->deposit(new Amount(1000), factory(Transfer::class)->create());
 
-        $this->assertEquals(1, $this->customer->deposits()->count());
-        $this->assertEquals(0, $this->customer->withdrawals()->count());
-        $this->assertTrue($this->customer->getBalance()->equals(new Amount(1000)));
+        $this->assertEquals(1, $this->escrow->customer->deposits()->count());
+        $this->assertEquals(0, $this->escrow->customer->withdrawals()->count());
+        $this->assertTrue($this->escrow->customer->getBalance()->equals(new Amount(1000)));
 
         $this->escrow->commit();
-        $this->assertEquals(1, $this->customer->deposits()->count());
-        $this->assertEquals(1, $this->customer->withdrawals()->count());
-        $this->assertTrue($this->customer->getBalance()->equals(new Amount(750)));
+        $this->assertEquals(1, $this->escrow->customer->deposits()->count());
+        $this->assertEquals(1, $this->escrow->customer->withdrawals()->count());
+        $this->assertEquals((new Amount(750))->get(), $this->escrow->customer->getBalance()->get());
     }
 
     /** @test **/
@@ -53,5 +56,16 @@ class CommitTest extends DatabaseTestCase
 
         $this->expectException(\Exception::class);
         $this->escrow->commit();
+    }
+
+    /** @test **/
+    function it_dispatches_events_when_committing()
+    {
+        Event::fake();
+
+        $this->escrow->commit();
+
+        Event::assertDispatched(EscrowDeposited::class);
+        Event::assertDispatched(EscrowCommitted::class);
     }
 }

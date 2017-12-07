@@ -42,6 +42,9 @@ class DatabaseTestCase extends TestCase
         $this->escrow();
     }
 
+    /**
+     * @return Escrow
+     */
     public function escrow()
     {
         return $this->escrow = app(EscrowRepository::class)->create(

@@ -49,7 +49,7 @@ class PaymentGateway implements PaymentGatewayContract
      *
      * @throws \Exception
      */
-    protected function handle()
+    public function handle()
     {
         if ($this->shouldFail) {
             throw new \Exception();

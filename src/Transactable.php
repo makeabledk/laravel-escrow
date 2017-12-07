@@ -34,7 +34,7 @@ trait Transactable
      */
     public function getBalance()
     {
-        return Amount::sum($this->deposits, 'amount')->subtract(Amount::sum($this->withdrawals, 'amount'));
+        return Amount::sum($this->deposits()->get(), 'amount')->subtract(Amount::sum($this->withdrawals()->get(), 'amount'));
     }
 
     /**

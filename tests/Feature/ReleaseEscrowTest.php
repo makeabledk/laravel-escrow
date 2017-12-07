@@ -7,7 +7,6 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
-use Makeable\LaravelEscrow\Transaction;
 
 class ReleaseEscrowTest extends DatabaseTestCase
 {
@@ -53,6 +52,7 @@ class ReleaseEscrowTest extends DatabaseTestCase
 
         $this->assertTrue($this->escrow->getBalance()->equals(Amount::zero()));
         $this->assertTrue($this->provider->getBalance()->equals($providerAmount));
+
         $this->assertTrue(app(SalesAccountContract::class)->getBalance()->equals($feeAmount));
     }
 

@@ -3,6 +3,7 @@
 namespace Makeable\LaravelEscrow\Tests\Fakes;
 
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
 
@@ -13,7 +14,7 @@ class TransferSource implements TransferSourceContract
      */
     public function refund()
     {
-        return new static();
+        return app(PaymentGatewayContract::class)->handle();
     }
 
     /**

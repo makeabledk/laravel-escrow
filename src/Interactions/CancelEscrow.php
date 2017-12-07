@@ -14,7 +14,7 @@ class CancelEscrow
      */
     public function handle($escrow)
     {
-        throw_unless($escrow->checkStatus(new EscrowStatus('committed')), IllegalEscrowAction::class);
+        throw_unless(in_array($escrow->status->get(), ['open', 'committed']), IllegalEscrowAction::class);
 
         $escrow->deposits->each->refund();
 

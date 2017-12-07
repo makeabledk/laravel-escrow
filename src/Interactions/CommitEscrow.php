@@ -4,6 +4,7 @@ namespace Makeable\LaravelEscrow\Interactions;
 
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\EscrowStatus;
+use Makeable\LaravelEscrow\Events\EscrowCommitted;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 
@@ -21,6 +22,6 @@ class CommitEscrow
         $escrow->committed_at = now();
         $escrow->save();
 
-        event(new EscrowReleased($escrow));
+        event(new EscrowCommitted($escrow));
     }
 }

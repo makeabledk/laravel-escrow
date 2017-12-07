@@ -13,6 +13,7 @@ use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
 use Makeable\LaravelEscrow\Tests\Fakes\PaymentGateway;
 use Makeable\LaravelEscrow\Tests\Fakes\Provider;
+use Makeable\LaravelEscrow\SalesAccount;
 use Makeable\LaravelEscrow\Transactable;
 use Makeable\LaravelEscrow\Transaction;
 use Makeable\LaravelEscrow\Transfer;
@@ -25,28 +26,8 @@ class TestCase extends BaseTestCase
 
         $this->setUpFactories($this->app);
 
-//        if (property_exists($this, 'migrateDatabase')) {
-//            $this->artisan('migrate');
-//        }
-
-        // Bind a dummy sales account
-        app()->singleton(SalesAccountContract::class, function () {
-            return new class() {
-                use Transactable;
-
-                public function getKey(){
-                    return rand();
-                }
-
-                public function getMorphClass(){
-                    return get_class($this);
-                }
-            };
-        });
-
-        app()->singleton(PaymentGatewayContract::class, function () {
-            return new PaymentGateway();
-        });
+        // Bind fake payment gateway
+        app()->singleton(PaymentGatewayContract::class, PaymentGateway::class);
 
         // Put Amount in test mode so we don't need a currency implementation
         Amount::test();
@@ -118,8 +99,8 @@ class TestCase extends BaseTestCase
         });
     }
 
-    protected function interact($class, ...$args)
-    {
-        return Interact::call($class, ...$args);
-    }
+//    protected function interact($class, ...$args)
+//    {
+//        return Interact::call($class, ...$args);
+//    }
 }
