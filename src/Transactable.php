@@ -9,15 +9,17 @@ trait Transactable
     /**
      * @param Amount $amount
      * @param $source
+     * @param Escrow | null $associatedEscrow
      *
      * @return Transaction
      */
-    public function deposit($amount, $source)
+    public function deposit($amount, $source, $associatedEscrow = null)
     {
-        return tap(app(Transaction::class))
+        return tap(app(Transaction::class)
             ->setAmount($amount)
             ->setSource($source)
             ->setDestination($this)
+            ->setAssociatedEscrow($associatedEscrow ?: $this->guessEscrowAssociation($source)))
             ->save();
     }
 
@@ -40,15 +42,17 @@ trait Transactable
     /**
      * @param Amount $amount
      * @param $destination
+     * @param Escrow | null $associatedEscrow
      *
      * @return Transaction
      */
-    public function withdraw($amount, $destination)
+    public function withdraw($amount, $destination, $associatedEscrow = null)
     {
-        return tap(app(Transaction::class))
+        return tap(app(Transaction::class)
             ->setAmount($amount)
             ->setSource($this)
             ->setDestination($destination)
+            ->setAssociatedEscrow($associatedEscrow ?: $this->guessEscrowAssociation($destination)))
             ->save();
     }
 
@@ -58,5 +62,21 @@ trait Transactable
     public function withdrawals()
     {
         return $this->morphMany(app(Transaction::class), 'source');
+    }
+
+    /**
+     * @param $other
+     *
+     * @return Escrow | null
+     */
+    private function guessEscrowAssociation($other)
+    {
+        if ($this instanceof Escrow) {
+            return $this;
+        } elseif ($other instanceof Escrow) {
+            return $other;
+        }
+
+        return null;
     }
 }

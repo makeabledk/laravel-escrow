@@ -6,25 +6,20 @@ use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract as PaymentGateway;
 use Makeable\LaravelEscrow\Events\CustomerCharged;
-use Makeable\LaravelEscrow\Transfer;
 
 class ChargeCustomer
 {
     /**
      * @param CustomerContract $customer
      * @param $amount
-     * @param null $reference
+     * @param null $associatedEscrow
      */
-    public function handle($customer, $amount, $reference = null)
+    public function handle($customer, $amount, $associatedEscrow = null)
     {
         if ($amount->gt(Amount::zero())) {
-            $transaction = $customer->deposit($amount, tap((new Transfer())
-                ->setAmount($amount)
-                ->setSource(app(PaymentGateway::class)->charge($customer, $amount, $reference)))
-                ->save()
-            );
+            $charge = app(PaymentGateway::class)->charge($customer, $amount, $associatedEscrow);
 
-            event(new CustomerCharged($customer, $transaction));
+            CustomerCharged::dispatch($customer, $customer->deposit($amount, $charge));
         }
     }
 }

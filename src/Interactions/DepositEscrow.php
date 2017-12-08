@@ -22,9 +22,10 @@ class DepositEscrow
             return;
         }
 
+        // Insufficient funds on customer class
         if ($escrow->customer->getBalance()->lt($amount)) {
             Interact::call(ChargeCustomer::class,
-                $escrow->customer, $amount->subtract($escrow->customer->getBalance()), $escrow->transfer_group
+                $escrow->customer, $amount->subtract($escrow->customer->getBalance()), $escrow
             );
         }
 

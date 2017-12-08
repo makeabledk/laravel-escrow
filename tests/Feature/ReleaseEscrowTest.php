@@ -40,8 +40,8 @@ class ReleaseEscrowTest extends DatabaseTestCase
     {
         $this->escrow->commit()->release();
 
-        $this->assertTrue($this->escrow->deposits->get(0)->getAmount()->equals($this->product->getDepositAmount()));
-        $this->assertTrue($this->escrow->deposits->get(1)->getAmount()->equals($this->product->getCustomerAmount()->subtract($this->product->getDepositAmount())));
+        $this->assertTrue($this->escrow->deposits->get(0)->amount->equals($this->product->getDepositAmount()));
+        $this->assertTrue($this->escrow->deposits->get(1)->amount->equals($this->product->getCustomerAmount()->subtract($this->product->getDepositAmount())));
     }
 
     /** @test **/

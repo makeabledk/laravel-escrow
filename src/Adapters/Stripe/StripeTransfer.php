@@ -2,25 +2,21 @@
 
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
-use Stripe\Transfer;
+use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelStripeObjects\StripeObject;
 
-class StripeTransfer extends StripeObject
+class StripeTransfer extends StripeObject implements RefundableContract
 {
     /**
-     * @param $id
+     * @param Amount|null $amount
      *
      * @return StripeTransfer
      */
-    public static function findOrFail($id)
+    public function refund(Amount $amount = null)
     {
-        return new static(Transfer::retrieve($id));
-    }
-
-    /**
-     * @return StripeTransfer
-     */
-    public function refund()
-    {
-        return new static($this->object->reverse());
+        return static::createFromObject(($object = $this->retrieve())->reverse([
+            'amount' => $amount ? $amount->convertTo($object->currency)->get() * 100 : null,
+        ]));
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTransfersTable extends Migration
+class CreateEscrowTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,16 @@ class CreateTransfersTable extends Migration
      */
     public function up()
     {
-        Schema::create('transfers', function (Blueprint $table) {
+        Schema::create('escrow_transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->morphs('source');
-            $table->text('source_data')->nullable();
+            $table->morphs('destination');
             $table->decimal('amount');
             $table->string('currency_code');
-            $table->boolean('is_refund')->default(0);
+            $table->integer('associated_escrow_id')->nullable()->unsigned();
             $table->timestamps();
+
+            $table->foreign('associated_escrow_id')->references('id')->on('escrows')->onDelete('set null')->onUpdate('cascade');
         });
     }
 
@@ -30,6 +32,6 @@ class CreateTransfersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('transfers');
+        Schema::drop('transactions');
     }
 }

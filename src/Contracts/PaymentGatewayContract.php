@@ -3,24 +3,25 @@
 namespace Makeable\LaravelEscrow\Contracts;
 
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Escrow;
 
 interface PaymentGatewayContract
 {
     /**
      * @param CustomerContract $customer
      * @param Amount           $amount
-     * @param $reference
+     * @param Escrow | null    $associatedEscrow
      *
      * @return TransferSourceContract
      */
-    public function charge($customer, $amount, $reference = null);
+    public function charge($customer, $amount, $associatedEscrow = null);
 
     /**
      * @param ProviderContract $provider
      * @param Amount           $amount
-     * @param $reference
+     * @param Escrow | null    $associatedEscrow
      *
      * @return TransferSourceContract
      */
-    public function pay($provider, $amount, $reference = null);
+    public function pay($provider, $amount, $associatedEscrow = null);
 }

@@ -8,6 +8,8 @@ use Makeable\LaravelEscrow\Repositories\EscrowRepository;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
 use Makeable\LaravelEscrow\Tests\Fakes\Provider;
+use Makeable\LaravelStripeObjects\StripeCharge;
+use Stripe\Charge;
 
 class DatabaseTestCase extends TestCase
 {
@@ -50,5 +52,13 @@ class DatabaseTestCase extends TestCase
             $this->customer = factory(Customer::class)->create(),
             $this->provider = factory(Provider::class)->create()
         );
+    }
+
+    /**
+     * @return \Makeable\LaravelStripeObjects\StripeObject
+     */
+    public function charge()
+    {
+        return StripeCharge::createFromObject(new Charge(1));
     }
 }

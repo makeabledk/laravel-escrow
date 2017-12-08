@@ -7,6 +7,11 @@ use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
+use Makeable\LaravelStripeObjects\StripeCharge;
+use Makeable\LaravelStripeObjects\StripeObject;
+use Makeable\LaravelStripeObjects\StripeTransfer;
+use Stripe\Charge;
+use Stripe\Transfer;
 
 class PaymentGateway implements PaymentGatewayContract
 {
@@ -20,11 +25,13 @@ class PaymentGateway implements PaymentGatewayContract
      * @param Amount           $amount
      * @param $reference
      *
-     * @return TransferSourceContract
+     * @return StripeObject
      */
     public function charge($customer, $amount, $reference = null)
     {
-        return $this->handle();
+        $this->maybeFail();
+
+        return StripeCharge::createFromObject(new Charge(uniqid()));
     }
 
     /**
@@ -32,29 +39,36 @@ class PaymentGateway implements PaymentGatewayContract
      * @param Amount           $amount
      * @param $reference
      *
-     * @return TransferSourceContract
+     * @return StripeObject
      */
     public function pay($provider, $amount, $reference = null)
     {
-        return $this->handle();
-    }
+        $this->maybeFail();
 
-    public function shouldFail()
-    {
-        $this->shouldFail = true;
+        return StripeTransfer::createFromObject(new Transfer(uniqid()));
     }
 
     /**
-     * @return TransferSource
+     * @return PaymentGateway
+     */
+    public function shouldFail()
+    {
+        $this->shouldFail = true;
+
+        return $this;
+    }
+
+    /**
+     * @return PaymentGateway
      *
      * @throws \Exception
      */
-    public function handle()
+    public function maybeFail()
     {
         if ($this->shouldFail) {
             throw new \Exception();
         }
 
-        return new TransferSource();
+        return $this;
     }
 }

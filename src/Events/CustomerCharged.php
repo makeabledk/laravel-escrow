@@ -2,13 +2,14 @@
 
 namespace Makeable\LaravelEscrow\Events;
 
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Transaction;
 
 class CustomerCharged
 {
-    use SerializesModels;
+    use Dispatchable, SerializesModels;
 
     /**
      * @var CustomerContract

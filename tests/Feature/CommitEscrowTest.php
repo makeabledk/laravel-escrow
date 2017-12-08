@@ -25,7 +25,7 @@ class CommitEscrowTest extends DatabaseTestCase
     /** @test **/
     public function it_tries_to_withdraw_from_customer_before_charging_the_customers_credit_card()
     {
-        $this->customer->deposit(new Amount(1000), factory(Transfer::class)->create());
+        $this->customer->deposit(new Amount(1000), $this->charge());
 
         $this->assertEquals(1, $this->escrow->customer->deposits()->count());
         $this->assertEquals(0, $this->escrow->customer->withdrawals()->count());
@@ -40,13 +40,13 @@ class CommitEscrowTest extends DatabaseTestCase
     /** @test **/
     public function it_charges_customers_credit_card_when_insufficient_funds_available()
     {
-        $this->customer->deposit(new Amount(100), factory(Transfer::class)->create());
+        $this->customer->deposit(new Amount(100), $this->charge());
 
         $this->escrow->commit();
 
         $this->assertEquals(2, $this->customer->deposits()->count());
         $this->assertEquals(1, $this->customer->withdrawals()->count());
-        $this->assertTrue($this->customer->deposits->get(1)->getAmount()->equals(new Amount(150)));
+        $this->assertTrue($this->customer->deposits->get(1)->amount->equals(new Amount(150)));
     }
 
     /** @test **/

@@ -93,13 +93,13 @@ class Escrow extends Eloquent implements TransactableContract
     // _________________________________________________________________________________________________________________
 
     /**
-     * @return Escrow
+     * @param bool $refundDeposits
      *
-     * @throws IllegalEscrowAction
+     * @return Escrow
      */
-    public function cancel()
+    public function cancel($refundDeposits = true)
     {
-        Interact::call(CancelEscrow::class, $this);
+        Interact::call(CancelEscrow::class, $this, $refundDeposits);
 
         return $this;
     }
@@ -148,7 +148,7 @@ class Escrow extends Eloquent implements TransactableContract
     /**
      * @return string
      */
-    public function getTransferGroupAttribute()
+    public function getIdentifierAttribute()
     {
         return class_basename($this)."#{$this->id}";
     }

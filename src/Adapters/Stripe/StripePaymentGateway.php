@@ -6,6 +6,7 @@ use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
+use Makeable\LaravelEscrow\Escrow;
 
 class StripePaymentGateway implements PaymentGatewayContract
 {
@@ -25,46 +26,46 @@ class StripePaymentGateway implements PaymentGatewayContract
     /**
      * @param CustomerContract $customer
      * @param Amount           $amount
-     * @param null             $reference
+     * @param Escrow | null    $associatedEscrow
      *
      * @return StripeCharge
      */
-    public function charge($customer, $amount, $reference = null)
+    public function charge($customer, $amount, $associatedEscrow = null)
     {
         $options = [
             'amount' => $amount->get(),
             'currency' => $amount->currency()->getCode(),
-            'customer' => $customer->stripe_id,
+            'customer' => $customer->stripeCustomer()->id,
             'api_key' => $this->apiKey,
         ];
 
-        if ($reference) {
-            $options['transfer_group'] = $reference;
+        if ($associatedEscrow) {
+            $options['transfer_group'] = $associatedEscrow->identifier;
         }
 
-        return app()->make(StripeCharge::class, [\Stripe\Charge::create($options)]);
+        return StripeCharge::createFromObject(\Stripe\Charge::create($options));
     }
 
     /**
      * @param ProviderContract $provider
      * @param Amount           $amount
-     * @param null             $reference
+     * @param Escrow | null    $associatedEscrow
      *
      * @return StripeTransfer
      */
-    public function pay($provider, $amount, $reference = null)
+    public function pay($provider, $amount, $associatedEscrow = null)
     {
         $options = [
             'amount' => $amount->get(),
             'currency' => $amount->currency()->getCode(),
-            'destination' => $provider->stripe_account_id,
+            'destination' => $provider->stripeAccount()->id,
             'api_key' => $this->apiKey,
         ];
 
-        if ($reference) {
-            $options['transfer_group'] = $reference;
+        if ($associatedEscrow) {
+            $options['transfer_group'] = $associatedEscrow->identifier;
         }
 
-        return app()->make(StripeTransfer::class, [\Stripe\Transfer::create($options)]);
+        return StripeTransfer::createFromObject(\Stripe\Transfer::create($options));
     }
 }

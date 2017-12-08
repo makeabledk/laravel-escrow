@@ -30,7 +30,7 @@ class TransferSource implements TransferSourceContract
     /**
      * @return Amount
      */
-    public function getAmount()
+    public function amount
     {
         return new Amount(100);
     }

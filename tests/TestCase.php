@@ -17,6 +17,7 @@ use Makeable\LaravelEscrow\SalesAccount;
 use Makeable\LaravelEscrow\Transactable;
 use Makeable\LaravelEscrow\Transaction;
 use Makeable\LaravelEscrow\Transfer;
+use Makeable\LaravelStripeObjects\Providers\StripeObjectsServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -50,6 +51,7 @@ class TestCase extends BaseTestCase
         $app->useEnvironmentPath(__DIR__.'/..');
         $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
         $app->register(EscrowServiceProvider::class);
+        $app->register(StripeObjectsServiceProvider::class);
         $app->afterResolving('migrator', function ($migrator) {
             $migrator->path(__DIR__.'/migrations/');
         });
@@ -73,14 +75,14 @@ class TestCase extends BaseTestCase
             ];
         });
 
-        $app->make(Factory::class)->define(Transfer::class, function ($faker) {
-            return [
-                'source_type' => 'foo',
-                'source_id' => 1,
-                'amount' => rand(100, 1000),
-                'currency_code' => Amount::zero()->currency()->getCode(),
-            ];
-        });
+//        $app->make(Factory::class)->define(Transfer::class, function ($faker) {
+//            return [
+//                'source_type' => 'foo',
+//                'source_id' => 1,
+//                'amount' => rand(100, 1000),
+//                'currency_code' => Amount::zero()->currency()->getCode(),
+//            ];
+//        });
 
         $app->make(Factory::class)->define(Customer::class, function ($faker) {
             return [
