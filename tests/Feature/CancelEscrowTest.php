@@ -41,12 +41,25 @@ class CancelEscrowTest extends DatabaseTestCase
     }
 
     /** @test **/
-    public function it_refunds_the_charged_amount_to_the_customers_available_funds()
+    function it_refunds_the_original_charge_per_default()
     {
         $this->escrow->commit()->cancel();
 
+        $this->assertEquals(2, $this->customer->deposits()->count());
+        $this->assertEquals(2, $this->customer->withdrawals()->count());
+
+        $this->assertEquals(0, $this->customer->getBalance()->get());
+    }
+
+    /** @test **/
+    function it_can_omit_refunding_the_original_charge_keeping_it_for_the_customers_available_funds()
+    {
+        $this->escrow->commit()->cancel(false);
+
+        $this->assertEquals(2, $this->customer->deposits()->count());
+        $this->assertEquals(1, $this->customer->withdrawals()->count());
+
         $this->assertEquals($this->product->getDepositAmount()->get(), $this->customer->getBalance()->get());
-        $this->assertEquals(0, $this->escrow->getBalance()->get());
     }
 
     /** @test **/
@@ -57,17 +70,5 @@ class CancelEscrowTest extends DatabaseTestCase
         $this->escrow()->cancel();
 
         Event::assertDispatched(EscrowCancelled::class);
-    }
-
-    /** @test **/
-    function it_refunds_the_original_charge_per_default()
-    {
-        $this->escrow->commit()->cancel();
-
-        $originalCharge = $this->customer->deposits()->first();
-
-        $this->assertInstanceOf(Transaction::class, $originalCharge);
-
-//        $this->assertTrue($originalCharge->retrieve()->isCancelled());
     }
 }

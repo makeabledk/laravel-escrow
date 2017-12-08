@@ -9,6 +9,7 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Escrow;
+use Makeable\LaravelEscrow\Events\RefundCreated;
 
 class StripePaymentGateway implements PaymentGatewayContract
 {
@@ -95,6 +96,8 @@ class StripePaymentGateway implements PaymentGatewayContract
             throw new BadMethodCallException("Stripe payment gateway can't refund {$class}");
         }
 
-        return $class::createFromObject($refund);
+        return tap($class::createFromObject($refund), function ($refund) use ($refundable) {
+            RefundCreated::dispatch($refund, $refundable);
+        });
     }
 }

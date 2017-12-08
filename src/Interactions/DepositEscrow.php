@@ -7,6 +7,7 @@ use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Events\EscrowFunded;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
+use Makeable\LaravelEscrow\Jobs\ChargeCustomer;
 
 class DepositEscrow
 {
@@ -24,7 +25,7 @@ class DepositEscrow
 
         // Insufficient funds on customer class
         if ($escrow->customer->getBalance()->lt($amount)) {
-            Interact::call(ChargeCustomer::class,
+            ChargeCustomer::dispatch(
                 $escrow->customer, $amount->subtract($escrow->customer->getBalance()), $escrow
             );
         }

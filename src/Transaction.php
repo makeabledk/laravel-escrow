@@ -60,13 +60,48 @@ class Transaction extends Eloquent
      * @param Builder      $query
      * @param Escrow | int $escrow
      *
-     * @return mixed
+     * @return Builder
      */
     public function scopeAssociatedWith($query, $escrow)
     {
         return $query->where('associated_escrow_id', is_object($escrow) ? $escrow->id : $escrow);
     }
 
+    /**
+     * @param Builder $query
+     * @param Eloquent $destination
+     * @return Builder
+     */
+    public function scopeDestinationIs($query, $destination)
+    {
+        return $query
+            ->where('destination_type', $destination->getMorphClass())
+            ->where('destination_id', $destination->getKey());
+    }
+
+    /**
+     * @param Builder $query
+     * @param Eloquent $source
+     * @return Builder
+     */
+    public function scopeSourceIs($query, $source)
+    {
+        return $query
+            ->where('source_type', $source->getMorphClass())
+            ->where('source_id', $source->getKey());
+    }
+
+    /**
+     * @param Builder $query
+     * @param $object
+     * @return Builder mixed
+     */
+    public function scopeSourceOrDestinationIs($query, $object)
+    {
+        return $query->sourceIs($object)->orWhere(function ($query) use ($object) {
+            $query->destinationIs($object);
+        });
+    }
     // _________________________________________________________________________________________________________________
 
     /**
