@@ -13,8 +13,6 @@ class DatabaseTestCase extends TestCase
 {
     use RefreshDatabase;
 
-    protected $migrateDatabase = true;
-
     /**
      * @var Escrow
      */

@@ -98,9 +98,4 @@ class TestCase extends BaseTestCase
             ];
         });
     }
-
-//    protected function interact($class, ...$args)
-//    {
-//        return Interact::call($class, ...$args);
-//    }
 }

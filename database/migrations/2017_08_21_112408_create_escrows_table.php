@@ -14,20 +14,13 @@ class CreateEscrowsTable extends Migration
     {
         Schema::create('escrows', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('escrowable_type');
-            $table->integer('escrowable_id');
-            $table->string('customer_type');
-            $table->integer('customer_id');
-            $table->string('provider_type');
-            $table->integer('provider_id');
+            $table->morphs('escrowable');
+            $table->morphs('customer');
+            $table->morphs('provider');
             $table->timestamp('committed_at')->nullable();
             $table->timestamp('released_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
-
-            $table->index(['escrowable_type', 'escrowable_id']);
-            $table->index(['customer_type', 'customer_id']);
-            $table->index(['provider_type', 'provider_id']);
         });
     }
 

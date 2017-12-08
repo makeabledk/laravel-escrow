@@ -2,8 +2,12 @@
 
 namespace Makeable\LaravelEscrow\Tests\Feature;
 
+use Illuminate\Support\Facades\Event;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
+use Makeable\LaravelEscrow\Events\EscrowDeposited;
+use Makeable\LaravelEscrow\Events\EscrowFunded;
+use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
@@ -56,11 +60,17 @@ class ReleaseEscrowTest extends DatabaseTestCase
         $this->assertTrue(app(SalesAccountContract::class)->getBalance()->equals($feeAmount));
     }
 
-//    public function test_it_can_hold_more_funds_than_required()
-//    {
-//        $escrow = $this->escrow(); // deposit fund 760 DKK
-//        $escrow->deposit(factory(Transaction::class)->make(['amount' => 1000, 'currency' => 'DKK']));
-//        $escrow->release();
-//    }
-//
+    /** @test **/
+    function it_dispatches_events_when_releasing()
+    {
+        $this->escrow->commit();
+
+        Event::fake();
+
+        $this->escrow->release();
+
+        Event::assertDispatched(EscrowDeposited::class);
+        Event::assertDispatched(EscrowFunded::class);
+        Event::assertDispatched(EscrowReleased::class);
+    }
 }

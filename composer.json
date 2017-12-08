@@ -13,7 +13,8 @@
         "illuminate/events": "^5.5",
         "makeabledk/laravel-currencies": "*",
         "makeabledk/laravel-eloquent-status": "dev-master",
-        "stripe/stripe-php": "~5.0"
+        "stripe/stripe-php": "~5.0",
+        "makeabledk/laravel-stripe-objects": "@dev"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.3",
@@ -27,6 +28,12 @@
             "Makeable\\LaravelEscrow\\Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./../laravel-stripe-objects"
+        }
+    ],
     "extra": {
         "laravel": {
             "providers": [

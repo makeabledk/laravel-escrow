@@ -48,26 +48,13 @@ class CancelEscrowTest extends DatabaseTestCase
         $this->assertEquals(0, $this->escrow->getBalance()->get());
     }
 
+    /** @test **/
+    public function it_fires_escrow_cancelled_event()
+    {
+        Event::fake();
 
-//    /** @test **/
-//    public function it_fires_escrow_cancelled_event()
-//    {
-//        Event::fake();
-//
-//        $this->interact(CancelEscrow::class, $this->escrow);
-//
-//        Event::assertDispatched(EscrowCancelled::class, function ($event) {
-//            return $event->escrow->id === $this->escrow->id;
-//        });
-//    }
-//
-//    /** @test **/
-//    function it_()
-//    {
-//        Event::fake();
-//
-//        $this->escrow->forceUpdate(['status' => 1]);
-//
-//        Event::assertNotDispatched(EscrowCancelled::class);
-//    }
+        $this->escrow()->cancel();
+
+        Event::assertDispatched(EscrowCancelled::class);
+    }
 }

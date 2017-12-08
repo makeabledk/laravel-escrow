@@ -6,8 +6,6 @@ use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
-use Stripe\Charge;
-use Stripe\Transfer;
 
 class StripePaymentGateway implements PaymentGatewayContract
 {
@@ -44,7 +42,7 @@ class StripePaymentGateway implements PaymentGatewayContract
             $options['transfer_group'] = $reference;
         }
 
-        return app()->make(StripeCharge::class, [Charge::create($options)]);
+        return app()->make(StripeCharge::class, [\Stripe\Charge::create($options)]);
     }
 
     /**
@@ -67,6 +65,6 @@ class StripePaymentGateway implements PaymentGatewayContract
             $options['transfer_group'] = $reference;
         }
 
-        return app()->make(StripeTransfer::class, [Transfer::create($options)]);
+        return app()->make(StripeTransfer::class, [\Stripe\Transfer::create($options)]);
     }
 }
