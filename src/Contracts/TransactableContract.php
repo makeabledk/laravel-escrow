@@ -3,6 +3,7 @@
 namespace Makeable\LaravelEscrow\Contracts;
 
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Transaction;
 
 interface TransactableContract extends MorphableContract
@@ -10,10 +11,11 @@ interface TransactableContract extends MorphableContract
     /**
      * @param Amount $amount
      * @param $source
+     * @param Escrow | null $associatedEscrow
      *
      * @return Transaction
      */
-    public function deposit($amount, $source);
+    public function deposit($amount, $source, $associatedEscrow = null);
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -28,10 +30,11 @@ interface TransactableContract extends MorphableContract
     /**
      * @param Amount $amount
      * @param $destination
+     * @param Escrow | null $associatedEscrow
      *
      * @return Transaction
      */
-    public function withdraw($amount, $destination);
+    public function withdraw($amount, $destination, $associatedEscrow = null);
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany

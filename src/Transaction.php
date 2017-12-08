@@ -6,7 +6,10 @@ use BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
+use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelStripeObjects\StripeObject;
 
 class Transaction extends Eloquent
 {
@@ -14,6 +17,13 @@ class Transaction extends Eloquent
      * @var string
      */
     public $table = 'escrow_transactions';
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'associated_escrow_id' => 'int'
+    ];
 
     /**
      * @var array
@@ -72,13 +82,11 @@ class Transaction extends Eloquent
             throw new BadMethodCallException("Refundable '{$refundable}' is not an object");
         }
 
-        if (in_array(RefundableContract::class, class_implements(get_class($this->$refundable)))) {
-            $this->$refundable->refund();
-
-            return true;
+        if ($isRefundable = in_array(RefundableContract::class, class_implements(get_class($this->$refundable)))) {
+            app(PaymentGatewayContract::class)->refund($this->$refundable);
         }
 
-        return false;
+        return $isRefundable;
     }
 
     /**

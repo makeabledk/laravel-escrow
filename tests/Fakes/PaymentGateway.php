@@ -2,15 +2,18 @@
 
 namespace Makeable\LaravelEscrow\Tests\Fakes;
 
+use Illuminate\Database\Eloquent\Model;
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
+use Makeable\LaravelEscrow\Adapters\Stripe\StripeTransfer;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
-use Makeable\LaravelEscrow\Contracts\TransferSourceContract;
-use Makeable\LaravelStripeObjects\StripeCharge;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelStripeObjects\StripeObject;
-use Makeable\LaravelStripeObjects\StripeTransfer;
+use Makeable\LaravelStripeObjects\StripeRefund;
 use Stripe\Charge;
+use Stripe\Refund;
 use Stripe\Transfer;
 
 class PaymentGateway implements PaymentGatewayContract
@@ -46,6 +49,19 @@ class PaymentGateway implements PaymentGatewayContract
         $this->maybeFail();
 
         return StripeTransfer::createFromObject(new Transfer(uniqid()));
+    }
+
+    /**
+     * @param RefundableContract $refundable
+     * @param Amount | null $amount
+     *
+     * @return Model
+     */
+    public function refund($refundable, $amount = null)
+    {
+        $this->maybeFail();
+
+        return StripeRefund::createFromObject(new Refund(uniqid()));
     }
 
     /**

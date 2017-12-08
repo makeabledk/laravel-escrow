@@ -2,10 +2,12 @@
 
 namespace Makeable\LaravelEscrow\Adapters\Stripe;
 
+use BadMethodCallException;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
+use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Escrow;
 
 class StripePaymentGateway implements PaymentGatewayContract
@@ -67,5 +69,32 @@ class StripePaymentGateway implements PaymentGatewayContract
         }
 
         return StripeTransfer::createFromObject(\Stripe\Transfer::create($options));
+    }
+
+    /**
+     * @param RefundableContract $refundable
+     * @param Amount|null $amount
+     * @return \Makeable\LaravelStripeObjects\StripeObject
+     */
+    public function refund($refundable, $amount = null)
+    {
+        $class = get_class($refundable);
+
+        $options = [
+            'amount' => $amount ? $amount->convertTo($refundable->currency)->get() * 100 : null,
+            'api_key' => $this->apiKey
+        ];
+
+        if ($class instanceof StripeCharge) {
+            $refund = $refundable->retrieve()->refund($options);
+        }
+        elseif ($class instanceof StripeTransfer) {
+            $refund = $refundable->retrieve()->reverse($options);
+        }
+        else {
+            throw new BadMethodCallException("Stripe payment gateway can't refund {$class}");
+        }
+
+        return $class::createFromObject($refund);
     }
 }

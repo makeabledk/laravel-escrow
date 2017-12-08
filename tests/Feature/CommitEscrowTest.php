@@ -50,6 +50,14 @@ class CommitEscrowTest extends DatabaseTestCase
     }
 
     /** @test **/
+    function it_associates_customer_charges_with_the_escrow()
+    {
+        $this->escrow->commit();
+
+        $this->assertEquals($this->escrow->id, $this->customer->deposits()->first()->associated_escrow_id);
+    }
+
+    /** @test **/
     public function it_fails_to_commit_if_cant_charge_deposit()
     {
         app(PaymentGatewayContract::class)->shouldFail();

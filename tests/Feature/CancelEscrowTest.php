@@ -10,6 +10,7 @@ use Makeable\LaravelEscrow\Events\EscrowCancelled;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
+use Makeable\LaravelEscrow\Transaction;
 
 class CancelEscrowTest extends DatabaseTestCase
 {
@@ -56,5 +57,17 @@ class CancelEscrowTest extends DatabaseTestCase
         $this->escrow()->cancel();
 
         Event::assertDispatched(EscrowCancelled::class);
+    }
+
+    /** @test **/
+    function it_refunds_the_original_charge_per_default()
+    {
+        $this->escrow->commit()->cancel();
+
+        $originalCharge = $this->customer->deposits()->first();
+
+        $this->assertInstanceOf(Transaction::class, $originalCharge);
+
+//        $this->assertTrue($originalCharge->retrieve()->isCancelled());
     }
 }

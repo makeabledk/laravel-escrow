@@ -19,7 +19,7 @@ class ChargeCustomer
         if ($amount->gt(Amount::zero())) {
             $charge = app(PaymentGateway::class)->charge($customer, $amount, $associatedEscrow);
 
-            CustomerCharged::dispatch($customer, $customer->deposit($amount, $charge));
+            CustomerCharged::dispatch($customer, $customer->deposit($amount, $charge, $associatedEscrow));
         }
     }
 }
