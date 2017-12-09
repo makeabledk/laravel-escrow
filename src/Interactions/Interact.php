@@ -14,7 +14,7 @@ class Interact
      */
     public static function call($interaction, ...$parameters)
     {
-        if (!Str::contains($interaction, '@')) {
+        if (! Str::contains($interaction, '@')) {
             $interaction = $interaction.'@handle';
         }
 

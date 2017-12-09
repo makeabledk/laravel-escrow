@@ -115,7 +115,7 @@ class Transaction extends Eloquent
      */
     public function attemptRefund($refundable)
     {
-        if (!is_object($this->$refundable)) {
+        if (! is_object($this->$refundable)) {
             throw new BadMethodCallException("Refundable '{$refundable}' is not an object");
         }
 

@@ -76,7 +76,5 @@ trait Transactable
         } elseif ($other instanceof Escrow) {
             return $other;
         }
-
-        return null;
     }
 }
