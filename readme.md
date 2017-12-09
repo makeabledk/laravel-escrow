@@ -1,14 +1,14 @@
 
 # Laravel Escrow
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/makeabledk/laravel-production-seeding.svg?style=flat-square)](https://packagist.org/packages/makeabledk/laravel-production-seeding)
-[![Build Status](https://img.shields.io/travis/makeabledk/laravel-production-seeding/master.svg?style=flat-square)](https://travis-ci.org/makeabledk/laravel-production-seeding)
-[![StyleCI](https://styleci.io/repos/95552885/shield?branch=master)](https://styleci.io/repos/95552885)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/makeabledk/laravel-escrow.svg?style=flat-square)](https://packagist.org/packages/makeabledk/laravel-escrow)
+[![Build Status](https://img.shields.io/travis/makeabledk/laravel-escrow/master.svg?style=flat-square)](https://travis-ci.org/makeabledk/laravel-escrow)
+[![StyleCI](https://styleci.io/repos/101027784/shield?branch=master)](https://styleci.io/repos/101027784)
 
 
 **IMPORTANT NOTICE** 
 
-This is a package used internally by makeabledk and may not follow Semver. Use it at your own risk.
+This is a package used internally by makeabledk and may not follow SemVer. Use it at your own risk.
 
 
 ## Install
