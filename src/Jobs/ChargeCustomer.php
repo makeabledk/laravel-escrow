@@ -2,10 +2,10 @@
 
 namespace Makeable\LaravelEscrow\Jobs;
 
-use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract as PaymentGateway;
@@ -16,12 +16,14 @@ class ChargeCustomer
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $customer, $amount, $associatedEscrow = null;
+    public $customer;
+    public $amount;
+    public $associatedEscrow = null;
 
     /**
      * @param CustomerContract $customer
-     * @param Amount $amount
-     * @param Escrow | null $associatedEscrow
+     * @param Amount           $amount
+     * @param Escrow | null    $associatedEscrow
      */
     public function __construct($customer, $amount, $associatedEscrow = null)
     {
@@ -30,8 +32,6 @@ class ChargeCustomer
         $this->associatedEscrow = $associatedEscrow;
     }
 
-    /**
-     */
     public function handle()
     {
         if ($this->amount->gt(Amount::zero())) {

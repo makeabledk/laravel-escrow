@@ -21,7 +21,7 @@ class TransactableTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_associates_deposits_with_an_escrow()
+    public function it_associates_deposits_with_an_escrow()
     {
         $transaction = $this->escrow->deposit(new Amount(100), $this->customer);
 
@@ -38,7 +38,7 @@ class TransactableTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_associates_withdrawals_with_an_escrow()
+    public function it_associates_withdrawals_with_an_escrow()
     {
         $transaction = $this->escrow->withdraw(new Amount(100), $this->provider);
 
@@ -58,6 +58,4 @@ class TransactableTest extends DatabaseTestCase
             $this->escrow->getBalance()->equals($deposit->amount->subtract($withdrawal->amount))
         );
     }
-
-
 }

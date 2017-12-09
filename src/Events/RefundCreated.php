@@ -4,10 +4,8 @@ namespace Makeable\LaravelEscrow\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Contracts\RefundContract;
-use Makeable\LaravelEscrow\Transaction;
 
 class RefundCreated
 {
@@ -25,7 +23,7 @@ class RefundCreated
 
     /**
      * @param RefundableContract $refundable
-     * @param RefundContract $refund
+     * @param RefundContract     $refund
      */
     public function __construct($refund, $refundable)
     {

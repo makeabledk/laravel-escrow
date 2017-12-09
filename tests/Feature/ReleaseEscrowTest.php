@@ -5,11 +5,11 @@ namespace Makeable\LaravelEscrow\Tests\Feature;
 use Illuminate\Support\Facades\Event;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
+use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Events\EscrowFunded;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 
@@ -64,7 +64,7 @@ class ReleaseEscrowTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_dispatches_events_when_releasing()
+    public function it_dispatches_events_when_releasing()
     {
         $this->escrow->commit();
 

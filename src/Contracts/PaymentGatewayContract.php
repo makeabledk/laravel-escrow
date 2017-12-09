@@ -28,7 +28,7 @@ interface PaymentGatewayContract
 
     /**
      * @param RefundableContract $provider
-     * @param Amount | null           $amount
+     * @param Amount | null      $amount
      *
      * @return Model
      */

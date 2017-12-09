@@ -12,7 +12,6 @@ use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\RefundCreated;
 use Stripe\Refund;
 use Stripe\Stripe;
-use Stripe\TransferReversal;
 
 class StripePaymentGateway implements PaymentGatewayContract
 {
@@ -36,7 +35,7 @@ class StripePaymentGateway implements PaymentGatewayContract
         $options = [
             'amount' => $amount->toCents(),
             'currency' => $amount->currency()->getCode(),
-            'customer' => $customer->stripeCustomer()->id
+            'customer' => $customer->stripeCustomer()->id,
         ];
 
         if ($associatedEscrow) {
@@ -58,7 +57,7 @@ class StripePaymentGateway implements PaymentGatewayContract
         $options = [
             'amount' => $amount->toCents(),
             'currency' => $amount->currency()->getCode(),
-            'destination' => $provider->stripeAccount()->id
+            'destination' => $provider->stripeAccount()->id,
         ];
 
         if ($associatedEscrow) {
@@ -70,22 +69,21 @@ class StripePaymentGateway implements PaymentGatewayContract
 
     /**
      * @param RefundableContract $refundable
-     * @param Amount|null $amount
+     * @param Amount|null        $amount
+     *
      * @return \Makeable\LaravelStripeObjects\StripeObject
      */
     public function refund($refundable, $amount = null)
     {
         $options = [
-            'amount' => $amount ? $amount->convertTo($refundable->currency)->toCents() : null
+            'amount' => $amount ? $amount->convertTo($refundable->currency)->toCents() : null,
         ];
 
         if ($refundable instanceof StripeCharge) {
             $refund = StripeRefund::createFromObject($refundable->retrieve()->refunds->create($options));
-        }
-        elseif ($refundable instanceof StripeTransfer) {
+        } elseif ($refundable instanceof StripeTransfer) {
             $refund = StripeTransferReversal::createFromObject($refundable->retrieve()->reversals->create($options));
-        }
-        else {
+        } else {
             throw new BadMethodCallException("Stripe payment gateway can't refund ".get_class($refundable));
         }
 

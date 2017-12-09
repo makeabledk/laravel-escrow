@@ -6,10 +6,8 @@ use BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Makeable\LaravelCurrencies\Amount;
-use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
-use Makeable\LaravelStripeObjects\StripeObject;
 
 class Transaction extends Eloquent
 {
@@ -22,7 +20,7 @@ class Transaction extends Eloquent
      * @var array
      */
     protected $casts = [
-        'associated_escrow_id' => 'int'
+        'associated_escrow_id' => 'int',
     ];
 
     /**
@@ -68,8 +66,9 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Builder $query
+     * @param Builder  $query
      * @param Eloquent $destination
+     *
      * @return Builder
      */
     public function scopeDestinationIs($query, $destination)
@@ -80,8 +79,9 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Builder $query
+     * @param Builder  $query
      * @param Eloquent $source
+     *
      * @return Builder
      */
     public function scopeSourceIs($query, $source)
@@ -94,6 +94,7 @@ class Transaction extends Eloquent
     /**
      * @param Builder $query
      * @param $object
+     *
      * @return Builder mixed
      */
     public function scopeSourceOrDestinationIs($query, $object)
@@ -102,6 +103,7 @@ class Transaction extends Eloquent
             $query->destinationIs($object);
         });
     }
+
     // _________________________________________________________________________________________________________________
 
     /**

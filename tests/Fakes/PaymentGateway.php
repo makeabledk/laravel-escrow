@@ -19,7 +19,8 @@ use Stripe\Transfer;
 
 class PaymentGateway implements PaymentGatewayContract
 {
-    protected $shouldFail = false, $refundAmount = null;
+    protected $shouldFail = false;
+    protected $refundAmount = null;
 
     public function __construct()
     {
@@ -56,7 +57,7 @@ class PaymentGateway implements PaymentGatewayContract
 
     /**
      * @param RefundableContract $refundable
-     * @param Amount | null $amount
+     * @param Amount | null      $amount
      *
      * @return Model
      */

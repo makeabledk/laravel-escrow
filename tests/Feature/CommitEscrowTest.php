@@ -9,7 +9,6 @@ use Makeable\LaravelEscrow\Events\EscrowCommitted;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
-use Makeable\LaravelEscrow\Transfer;
 
 class CommitEscrowTest extends DatabaseTestCase
 {
@@ -53,7 +52,7 @@ class CommitEscrowTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_associates_customer_charges_with_the_escrow()
+    public function it_associates_customer_charges_with_the_escrow()
     {
         $this->escrow->commit();
 
@@ -70,7 +69,7 @@ class CommitEscrowTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_dispatches_events_when_committing()
+    public function it_dispatches_events_when_committing()
     {
         Event::fake();
 
