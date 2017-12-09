@@ -6,6 +6,11 @@
 [![StyleCI](https://styleci.io/repos/95552885/shield?branch=master)](https://styleci.io/repos/95552885)
 
 
+**IMPORTANT NOTICE** 
+
+This is a package used internally by makeabledk and may not follow Semver. Use it at your own risk.
+
+
 ## Install
 
 You can install this package via composer:
@@ -13,10 +18,6 @@ You can install this package via composer:
 ``` bash
 composer require makeabledk/laravel-escrow
 ```
-
-## Usage
-
-## Examples
 
 ## Change log
 
