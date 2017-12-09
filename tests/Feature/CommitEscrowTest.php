@@ -8,10 +8,13 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Events\EscrowCommitted;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
+use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 use Makeable\LaravelEscrow\Transfer;
 
 class CommitEscrowTest extends DatabaseTestCase
 {
+    use FakePaymentGateway;
+
     /** @test **/
     public function it_charges_deposit_when_committing()
     {

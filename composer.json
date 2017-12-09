@@ -11,7 +11,7 @@
         "illuminate/support": "^5.5",
         "illuminate/database": "^5.5",
         "illuminate/events": "^5.5",
-        "makeabledk/laravel-currencies": "*",
+        "makeabledk/laravel-currencies": "@dev",
         "makeabledk/laravel-eloquent-status": "dev-master",
         "stripe/stripe-php": "~5.0",
         "makeabledk/laravel-stripe-objects": "@dev"

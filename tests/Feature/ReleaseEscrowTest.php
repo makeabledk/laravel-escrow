@@ -11,9 +11,12 @@ use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
+use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 
 class ReleaseEscrowTest extends DatabaseTestCase
 {
+    use FakePaymentGateway;
+
     /** @test **/
     public function it_cant_release_until_committed()
     {

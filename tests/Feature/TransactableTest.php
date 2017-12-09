@@ -4,10 +4,13 @@ namespace Makeable\LaravelEscrow\Tests\Feature;
 
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
+use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 use Makeable\LaravelEscrow\Transaction;
 
 class TransactableTest extends DatabaseTestCase
 {
+    use FakePaymentGateway;
+
     /** @test **/
     public function it_can_deposit_funds()
     {

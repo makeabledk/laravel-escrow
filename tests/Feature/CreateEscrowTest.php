@@ -4,11 +4,14 @@ namespace Makeable\LaravelEscrow\Tests\Feature;
 
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
+use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
 use Makeable\LaravelEscrow\Tests\Fakes\Provider;
 
 class CreateEscrowTest extends DatabaseTestCase
 {
+    use FakePaymentGateway;
+
     /** @test **/
     public function an_escrow_can_be_created_through_repository()
     {

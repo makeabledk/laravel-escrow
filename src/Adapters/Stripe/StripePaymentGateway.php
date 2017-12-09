@@ -10,20 +10,18 @@ use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\RefundCreated;
+use Stripe\Refund;
+use Stripe\Stripe;
+use Stripe\TransferReversal;
 
 class StripePaymentGateway implements PaymentGatewayContract
 {
-    /**
-     * @var mixed
-     */
-    protected $apiKey;
-
     /**
      * @param $apiKey
      */
     public function __construct($apiKey)
     {
-        $this->apiKey = $apiKey;
+        Stripe::setApiKey($apiKey);
     }
 
     /**
@@ -36,10 +34,9 @@ class StripePaymentGateway implements PaymentGatewayContract
     public function charge($customer, $amount, $associatedEscrow = null)
     {
         $options = [
-            'amount' => $amount->get(),
+            'amount' => $amount->toCents(),
             'currency' => $amount->currency()->getCode(),
-            'customer' => $customer->stripeCustomer()->id,
-            'api_key' => $this->apiKey,
+            'customer' => $customer->stripeCustomer()->id
         ];
 
         if ($associatedEscrow) {
@@ -59,10 +56,9 @@ class StripePaymentGateway implements PaymentGatewayContract
     public function pay($provider, $amount, $associatedEscrow = null)
     {
         $options = [
-            'amount' => $amount->get(),
+            'amount' => $amount->toCents(),
             'currency' => $amount->currency()->getCode(),
-            'destination' => $provider->stripeAccount()->id,
-            'api_key' => $this->apiKey,
+            'destination' => $provider->stripeAccount()->id
         ];
 
         if ($associatedEscrow) {
@@ -79,25 +75,22 @@ class StripePaymentGateway implements PaymentGatewayContract
      */
     public function refund($refundable, $amount = null)
     {
-        $class = get_class($refundable);
-
         $options = [
-            'amount' => $amount ? $amount->convertTo($refundable->currency)->get() * 100 : null,
-            'api_key' => $this->apiKey
+            'amount' => $amount ? $amount->convertTo($refundable->currency)->toCents() : null
         ];
 
-        if ($class instanceof StripeCharge) {
-            $refund = $refundable->retrieve()->refund($options);
+        if ($refundable instanceof StripeCharge) {
+            $refund = StripeRefund::createFromObject($refundable->retrieve()->refunds->create($options));
         }
-        elseif ($class instanceof StripeTransfer) {
-            $refund = $refundable->retrieve()->reverse($options);
+        elseif ($refundable instanceof StripeTransfer) {
+            $refund = StripeTransferReversal::createFromObject($refundable->retrieve()->reversals->create($options));
         }
         else {
-            throw new BadMethodCallException("Stripe payment gateway can't refund {$class}");
+            throw new BadMethodCallException("Stripe payment gateway can't refund ".get_class($refundable));
         }
 
-        return tap($class::createFromObject($refund), function ($refund) use ($refundable) {
-            RefundCreated::dispatch($refund, $refundable);
-        });
+        RefundCreated::dispatch($refund, $refundable);
+
+        return $refund;
     }
 }

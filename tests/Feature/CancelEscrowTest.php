@@ -10,10 +10,13 @@ use Makeable\LaravelEscrow\Events\EscrowCancelled;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Interactions\CancelEscrow;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
+use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 use Makeable\LaravelEscrow\Transaction;
 
 class CancelEscrowTest extends DatabaseTestCase
 {
+    use FakePaymentGateway;
+
     /** @test **/
     public function it_can_cancel_open_or_committed_escrows()
     {

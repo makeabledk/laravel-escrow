@@ -65,7 +65,7 @@ class PaymentGateway implements PaymentGatewayContract
         $this->maybeFail();
 
         return tap(StripeRefund::createFromObject(new Refund(uniqid())), function ($refund) use ($refundable) {
-            $refund->amount = $this->refundAmount->get() * 100;
+            $refund->amount = $this->refundAmount->toCents();
             $refund->currency = $this->refundAmount->currency()->getCode();
 
             RefundCreated::dispatch($refund, $refundable);
