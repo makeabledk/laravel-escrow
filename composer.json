@@ -30,6 +30,9 @@
     },
     "extra": {
         "laravel": {
+            "aliases": {
+                "Escrow": "Makeable\\LaravelEscrow\\EscrowFacade"
+            },
             "providers": [
                 "Makeable\\LaravelEscrow\\Providers\\EscrowServiceProvider"
             ]

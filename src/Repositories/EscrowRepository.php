@@ -16,13 +16,17 @@ class EscrowRepository
      *
      * @return Escrow
      */
-    public function find(EscrowableContract $escrowable, CustomerContract $customer, ProviderContract $provider)
+    public function findOrFail($escrowable, $customer = null, $provider = null)
     {
         return app(Escrow::class)->newQuery()
             ->escrowable($escrowable)
-            ->customer($customer)
-            ->provider($provider)
-            ->first();
+            ->when($customer, function ($query) use ($customer) {
+                $query->customer($customer);
+            })
+            ->when($provider, function ($query) use ($provider) {
+                $query->provider($provider);
+            })
+            ->firstOrFail();
     }
 
     /**
@@ -32,7 +36,7 @@ class EscrowRepository
      *
      * @return Escrow
      */
-    public function create(EscrowableContract $escrowable, CustomerContract $customer, ProviderContract $provider)
+    public function create($escrowable, $customer, $provider)
     {
         return app(Escrow::class)->create([
             'escrowable_type' => $escrowable->getMorphClass(),

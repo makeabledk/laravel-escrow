@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Escrow;
+use Makeable\LaravelEscrow\EscrowFacade;
 use Makeable\LaravelEscrow\Providers\EscrowServiceProvider;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
 use Makeable\LaravelEscrow\Tests\Fakes\Provider;
@@ -45,6 +46,10 @@ class TestCase extends BaseTestCase
         $app->afterResolving('migrator', function ($migrator) {
             $migrator->path(__DIR__.'/migrations/');
         });
+
+        // Register facade
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('Escrow', EscrowFacade::class);
 
         return $app;
     }
