@@ -4,7 +4,6 @@ namespace Makeable\LaravelEscrow\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Makeable\LaravelEscrow\Escrow;
-use Makeable\LaravelEscrow\Repositories\EscrowRepository;
 use Makeable\LaravelEscrow\Tests\Fakes\Customer;
 use Makeable\LaravelEscrow\Tests\Fakes\Product;
 use Makeable\LaravelEscrow\Tests\Fakes\Provider;

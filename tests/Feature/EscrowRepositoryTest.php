@@ -5,8 +5,6 @@ namespace Makeable\LaravelEscrow\Tests\Feature;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
-use Makeable\LaravelEscrow\Tests\Fakes\Customer;
-use Makeable\LaravelEscrow\Tests\Fakes\Provider;
 
 class EscrowRepositoryTest extends DatabaseTestCase
 {
@@ -25,7 +23,7 @@ class EscrowRepositoryTest extends DatabaseTestCase
     }
 
     /** @test **/
-    function it_can_find_an_escrow_from_the_escrowable_alone()
+    public function it_can_find_an_escrow_from_the_escrowable_alone()
     {
         $this->assertTrue(\Escrow::findOrFail($this->product)->is($this->escrow));
     }
