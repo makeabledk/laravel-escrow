@@ -15,7 +15,7 @@ class DepositSalesAccount
      */
     public function handle($escrow, $amount)
     {
-        if (! $amount->equals(Amount::zero()) && app()->bound(SalesAccountContract::class)) {
+        if ($amount->toCents() !== 0 && app()->bound(SalesAccountContract::class)) {
             $transaction = $escrow->withdraw(
                 $escrow->escrowable->getCustomerAmount()->subtract($escrow->escrowable->getProviderAmount()),
                 $salesAccount = app(SalesAccountContract::class)

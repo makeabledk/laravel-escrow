@@ -3,6 +3,8 @@
 namespace Makeable\LaravelEscrow\Tests\Feature\Interactions;
 
 use Makeable\LaravelCurrencies\Amount;
+use Makeable\LaravelCurrencies\Currency;
+use Makeable\LaravelCurrencies\TestCurrency;
 use Makeable\LaravelEscrow\Adapters\Stripe\StripeCharge;
 use Makeable\LaravelEscrow\Adapters\Stripe\StripePaymentGateway;
 use Makeable\LaravelEscrow\Adapters\Stripe\StripeRefund;
@@ -29,6 +31,20 @@ class StripePaymentGatewayTest extends DatabaseTestCase
         $this->assertInstanceOf(StripeCharge::class, $charge);
         $this->assertEquals($escrow->identifier, $charge->data['transfer_group']);
         $this->assertEquals(2500, $charge->data['amount']);
+    }
+
+    /** @test **/
+    public function it_charges_a_minimum_of_5DKK()
+    {
+        $charge = $this->gateway()->charge(
+            $this->validCustomer(),
+            $amount = new Amount(0.1, 'USD'),
+            $escrow = factory(Escrow::class)->create()
+        );
+
+        $this->assertInstanceOf(StripeCharge::class, $charge);
+        $this->assertEquals($escrow->identifier, $charge->data['transfer_group']);
+        $this->assertEquals((new Amount(5, 'DKK'))->convertTo(TestCurrency::fromCode('USD'))->toCents(), $charge->data['amount']);
     }
 
     /** @test **/

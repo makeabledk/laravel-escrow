@@ -32,6 +32,8 @@ class StripePaymentGateway implements PaymentGatewayContract
      */
     public function charge($customer, $amount, $associatedEscrow = null)
     {
+        $amount = $amount->minimum((new Amount(5, 'DKK'))->convertTo($amount->currency()));
+
         $options = [
             'amount' => $amount->toCents(),
             'currency' => $amount->currency()->getCode(),

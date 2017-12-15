@@ -19,7 +19,7 @@ class DepositEscrow
     {
         throw_unless(in_array($escrow->status->get(), ['open', 'committed']), IllegalEscrowAction::class);
 
-        if ($amount->lte(Amount::zero())) {
+        if ($amount->toCents() <= 0) {
             return;
         }
 

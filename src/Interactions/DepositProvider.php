@@ -14,7 +14,7 @@ class DepositProvider
      */
     public function handle($escrow, $amount)
     {
-        if ($amount->gt(Amount::zero())) {
+        if ($amount->toCents() > 0) {
             event(new ProviderDeposited($escrow->provider, $escrow->provider->deposit($amount, $escrow)));
         }
     }
