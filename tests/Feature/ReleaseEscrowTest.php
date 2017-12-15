@@ -57,8 +57,6 @@ class ReleaseEscrowTest extends DatabaseTestCase
             $this->product->getCustomerAmount()->subtract($this->product->getProviderAmount()),
         ];
 
-        dd(app(SalesAccountContract::class)->getBalance());
-
         $this->assertTrue($this->escrow->getBalance()->equals(Amount::zero()));
         $this->assertTrue($this->provider->getBalance()->equals($providerAmount));
 
