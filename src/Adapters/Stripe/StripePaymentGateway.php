@@ -8,9 +8,9 @@ use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelEscrow\Contracts\RefundContract;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\RefundCreated;
-use Stripe\Refund;
 use Stripe\Stripe;
 
 class StripePaymentGateway implements PaymentGatewayContract
@@ -73,7 +73,7 @@ class StripePaymentGateway implements PaymentGatewayContract
      * @param RefundableContract $refundable
      * @param Amount|null        $amount
      *
-     * @return \Makeable\LaravelStripeObjects\StripeObject
+     * @return \Makeable\LaravelStripeObjects\StripeObject|RefundContract
      */
     public function refund($refundable, $amount = null)
     {

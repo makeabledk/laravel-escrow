@@ -72,6 +72,7 @@ class StripePaymentGatewayTest extends DatabaseTestCase
 
         $this->assertInstanceOf(StripeRefund::class, $refund);
         $this->assertEquals(2500, $charge->retrieve()->amount_refunded);
+        $this->assertEquals(2500, $refund->getAmount()->toCents());
     }
 
     /** @test **/

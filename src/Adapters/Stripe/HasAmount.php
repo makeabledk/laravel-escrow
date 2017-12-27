@@ -11,6 +11,9 @@ trait HasAmount
      */
     public function getAmount()
     {
-        return new Amount($this->amount / 100, $this->currency);
+        return Amount::fromCents(
+            data_get($this->data, 'amount'),
+            data_get($this->data, 'currency')
+        );
     }
 }
