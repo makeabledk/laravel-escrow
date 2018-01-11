@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Repositories;
 
+use Exception;
 use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\EscrowableContract;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
@@ -27,6 +28,22 @@ class EscrowRepository
                 $query->provider($provider);
             })
             ->firstOrFail();
+    }
+
+    /**
+     * @param $escrowable
+     * @param $customer
+     * @param $provider
+     * @return Escrow
+     */
+    public function findOrCreate($escrowable, $customer, $provider)
+    {
+        try {
+            return $this->findOrFail($escrowable, $customer, $provider);
+        }
+        catch (Exception $e) {
+            return $this->create($escrowable, $customer, $provider);
+        }
     }
 
     /**
