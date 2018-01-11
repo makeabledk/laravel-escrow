@@ -40,8 +40,7 @@ class EscrowRepository
     {
         try {
             return $this->findOrFail($escrowable, $customer, $provider);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->create($escrowable, $customer, $provider);
         }
     }
