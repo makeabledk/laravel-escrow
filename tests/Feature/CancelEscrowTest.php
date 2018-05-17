@@ -11,7 +11,6 @@ use Makeable\LaravelEscrow\Labels\AccountPayout;
 use Makeable\LaravelEscrow\Labels\EscrowDepositRefund;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
-use Makeable\LaravelEscrow\Transaction;
 
 class CancelEscrowTest extends DatabaseTestCase
 {

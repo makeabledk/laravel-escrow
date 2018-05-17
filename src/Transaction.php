@@ -222,7 +222,7 @@ class Transaction extends Eloquent
     public function setLabel($label)
     {
         return $this->fill([
-            'label_type' => (is_object($label) ? $label : new $label)->getMorphClass()
+            'label_type' => (is_object($label) ? $label : new $label)->getMorphClass(),
         ]);
     }
 

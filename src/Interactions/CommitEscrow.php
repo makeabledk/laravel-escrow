@@ -6,7 +6,6 @@ use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowCommitted;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\Labels\FinalEscrowDeposit;
 
 class CommitEscrow
 {
@@ -25,4 +24,3 @@ class CommitEscrow
         event(new EscrowCommitted($escrow));
     }
 }
-
