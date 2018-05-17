@@ -7,6 +7,8 @@ use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Events\EscrowCommitted;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
+use Makeable\LaravelEscrow\Labels\AccountDeposit;
+use Makeable\LaravelEscrow\Labels\EscrowDeposit;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 
@@ -66,6 +68,18 @@ class CommitEscrowTest extends DatabaseTestCase
 
         $this->expectException(\Exception::class);
         $this->escrow->commit();
+    }
+
+    /** @test **/
+    public function it_labels_transactions_when_charging_and_depositing()
+    {
+        $this->escrow->commit();
+
+        $accountDeposit = $this->customer->deposits()->first();
+        $this->assertInstanceOf(AccountDeposit::class, $accountDeposit->label());
+
+        $escrowDeposit = $this->escrow->deposits()->first();
+        $this->assertInstanceOf(EscrowDeposit::class, $escrowDeposit->label());
     }
 
     /** @test **/

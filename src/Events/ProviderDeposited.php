@@ -2,13 +2,14 @@
 
 namespace Makeable\LaravelEscrow\Events;
 
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Transaction;
 
 class ProviderDeposited
 {
-    use SerializesModels;
+    use SerializesModels, Dispatchable;
 
     /**
      * @var ProviderContract

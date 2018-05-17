@@ -8,14 +8,18 @@ use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Events\EscrowFunded;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Jobs\ChargeCustomer;
+use Makeable\LaravelEscrow\Labels\EscrowDeposit;
+use Makeable\LaravelEscrow\Labels\Label;
 
 class DepositEscrow
 {
     /**
      * @param Escrow $escrow
      * @param Amount $amount
+     * @param Label | string $label
+     * @throws \Throwable
      */
-    public function handle($escrow, $amount)
+    public function handle($escrow, $amount, $label = null)
     {
         throw_unless(in_array($escrow->status->get(), ['open', 'committed']), IllegalEscrowAction::class);
 
@@ -30,7 +34,9 @@ class DepositEscrow
             );
         }
 
-        event(new EscrowDeposited($escrow, $escrow->deposit($amount, $escrow->customer)));
+        event(new EscrowDeposited($escrow, $escrow->deposit($amount, $escrow->customer, function ($transaction) use ($label) {
+            $transaction->setLabel($label ?: app(EscrowDeposit::class));
+        })));
 
         if ($escrow->isFunded()) {
             event(new EscrowFunded($escrow));

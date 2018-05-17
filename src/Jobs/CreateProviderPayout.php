@@ -11,6 +11,8 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract as PaymentGateway;
 use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\ProviderPaid;
+use Makeable\LaravelEscrow\Labels\AccountPayout;
+use Makeable\LaravelEscrow\Labels\Label;
 
 class CreateProviderPayout
 {
@@ -18,18 +20,21 @@ class CreateProviderPayout
 
     public $provider;
     public $amount;
-    public $associatedEscrow = null;
+    public $associatedEscrow;
+    public $label;
 
     /**
      * @param ProviderContract $provider
      * @param Amount           $amount
      * @param Escrow | null    $associatedEscrow
+     * @param Label | string | null $label
      */
-    public function __construct($provider, $amount, $associatedEscrow = null)
+    public function __construct($provider, $amount, $associatedEscrow = null, $label = null)
     {
         $this->provider = $provider;
         $this->amount = $amount ?: $provider->getBalance();
         $this->associatedEscrow = $associatedEscrow;
+        $this->label = $label;
     }
 
     public function handle()
@@ -37,7 +42,9 @@ class CreateProviderPayout
         if ($this->amount->gt(Amount::zero())) {
             $payout = app(PaymentGateway::class)->pay($this->provider, $this->amount, $this->associatedEscrow);
 
-            ProviderPaid::dispatch($this->provider, $this->provider->withdraw($this->amount, $payout));
+            ProviderPaid::dispatch($this->provider, $this->provider->withdraw($this->amount, $payout, function ($transaction) {
+                $transaction->setLabel(app(AccountPayout::class));
+            }));
         }
     }
 }

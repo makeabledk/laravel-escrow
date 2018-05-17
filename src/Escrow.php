@@ -93,13 +93,13 @@ class Escrow extends Eloquent implements TransactableContract
     // _________________________________________________________________________________________________________________
 
     /**
-     * @param bool $refundDeposits
+     * @param bool $payoutDeposits
      *
      * @return Escrow
      */
-    public function cancel($refundDeposits = true)
+    public function cancel($payoutDeposits = true)
     {
-        Interact::call(CancelEscrow::class, $this, $refundDeposits);
+        Interact::call(CancelEscrow::class, $this, $payoutDeposits);
 
         return $this;
     }
