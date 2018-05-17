@@ -5,8 +5,8 @@ namespace Makeable\LaravelEscrow\Interactions;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\ProviderDeposited;
-use Makeable\LaravelEscrow\Labels\TransactionLabel;
 use Makeable\LaravelEscrow\Labels\ProviderPayment;
+use Makeable\LaravelEscrow\Labels\TransactionLabel;
 
 class DepositProvider
 {
