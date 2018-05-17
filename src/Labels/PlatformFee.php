@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Labels;
 
-class PlatformFee extends Label
+class PlatformFee
 {
+    use TransactionLabel;
 }

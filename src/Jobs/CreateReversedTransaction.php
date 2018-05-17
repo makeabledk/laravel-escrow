@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Contracts\RefundContract;
-use Makeable\LaravelEscrow\Labels\Label;
+use Makeable\LaravelEscrow\Labels\TransactionLabel;
 use Makeable\LaravelEscrow\Transaction;
 
 class CreateReversedTransaction
@@ -22,7 +22,7 @@ class CreateReversedTransaction
     /**
      * @param RefundableContract $refundable
      * @param RefundContract $refund
-     * @param Label | string | null $label
+     * @param TransactionLabel | string | null $label
      */
     public function __construct($refundable, $refund, $label = null)
     {

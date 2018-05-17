@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
-use Makeable\LaravelEscrow\Labels\Label;
+use Makeable\LaravelEscrow\Labels\TransactionLabel;
 
 class Transaction extends Eloquent
 {
@@ -47,13 +47,13 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @return Label
+     * @return TransactionLabel
      */
     public function label()
     {
         $label = Relation::getMorphedModel($this->label_type) ?: $this->label_type;
 
-        return $label ? new $label($this) : null;
+        return $label ? tap(new $label)->bindTransaction($this) : null;
     }
 
     /**
@@ -92,7 +92,7 @@ class Transaction extends Eloquent
 
     /**
      * @param Builder $query
-     * @param Label | string $label
+     * @param TransactionLabel | string $label
      * @return Builder
      */
     public function scopeLabelIs($query, $label)
@@ -216,7 +216,7 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Label | string $label
+     * @param TransactionLabel | string $label
      * @return $this
      */
     public function setLabel($label)

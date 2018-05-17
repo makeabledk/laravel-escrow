@@ -9,14 +9,14 @@ use Makeable\LaravelEscrow\Events\EscrowFunded;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
 use Makeable\LaravelEscrow\Jobs\ChargeCustomer;
 use Makeable\LaravelEscrow\Labels\EscrowDeposit;
-use Makeable\LaravelEscrow\Labels\Label;
+use Makeable\LaravelEscrow\Labels\TransactionLabel;
 
 class DepositEscrow
 {
     /**
      * @param Escrow $escrow
      * @param Amount $amount
-     * @param Label | string $label
+     * @param TransactionLabel | string $label
      * @throws \Throwable
      */
     public function handle($escrow, $amount, $label = null)

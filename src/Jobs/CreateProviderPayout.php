@@ -12,7 +12,7 @@ use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\ProviderPaid;
 use Makeable\LaravelEscrow\Labels\AccountPayout;
-use Makeable\LaravelEscrow\Labels\Label;
+use Makeable\LaravelEscrow\Labels\TransactionLabel;
 
 class CreateProviderPayout
 {
@@ -27,7 +27,7 @@ class CreateProviderPayout
      * @param ProviderContract $provider
      * @param Amount           $amount
      * @param Escrow | null    $associatedEscrow
-     * @param Label | string | null $label
+     * @param TransactionLabel | string | null $label
      */
     public function __construct($provider, $amount, $associatedEscrow = null, $label = null)
     {

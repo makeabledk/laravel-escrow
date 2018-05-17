@@ -5,7 +5,7 @@ namespace Makeable\LaravelEscrow\Labels;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Makeable\LaravelEscrow\Transaction;
 
-abstract class Label
+trait TransactionLabel
 {
     /**
      * @var Transaction
@@ -15,7 +15,7 @@ abstract class Label
     /**
      * @param Transaction $transaction
      */
-    public function __construct(Transaction $transaction = null)
+    public function bindTransaction(Transaction $transaction)
     {
         $this->transaction = $transaction;
     }

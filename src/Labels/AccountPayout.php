@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Labels;
 
-class AccountPayout extends Label
+class AccountPayout
 {
+    use TransactionLabel;
 }

@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Labels;
 
-class FinalEscrowDeposit extends Label
+class FinalEscrowDeposit
 {
+    use TransactionLabel;
 }

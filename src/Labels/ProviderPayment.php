@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow\Labels;
 
-class ProviderPayment extends Label
+class ProviderPayment
 {
+    use TransactionLabel;
 }

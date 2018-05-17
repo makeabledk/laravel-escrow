@@ -12,7 +12,7 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract as PaymentGateway;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\CustomerCharged;
 use Makeable\LaravelEscrow\Labels\AccountDeposit;
-use Makeable\LaravelEscrow\Labels\Label;
+use Makeable\LaravelEscrow\Labels\TransactionLabel;
 
 class ChargeCustomer
 {
@@ -27,7 +27,7 @@ class ChargeCustomer
      * @param CustomerContract $customer
      * @param Amount $amount
      * @param Escrow | null $associatedEscrow
-     * @param Label | string | null $label
+     * @param TransactionLabel | string | null $label
      */
     public function __construct($customer, $amount, $associatedEscrow = null, $label = null)
     {
