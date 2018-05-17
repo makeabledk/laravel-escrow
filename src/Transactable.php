@@ -9,17 +9,18 @@ trait Transactable
     /**
      * @param Amount $amount
      * @param $source
-     * @param Escrow | null $associatedEscrow
+     * @param callable $callable
      *
      * @return Transaction
      */
-    public function deposit($amount, $source, $associatedEscrow = null)
+    public function deposit($amount, $source, $callable = null)
     {
         return tap(app(Transaction::class)
             ->setAmount($amount)
             ->setSource($source)
             ->setDestination($this)
-            ->setAssociatedEscrow($associatedEscrow ?: $this->guessEscrowAssociation($source)))
+            ->setAssociatedEscrow($this->guessEscrowAssociation($source))
+            ->pipe($callable))
             ->save();
     }
 
@@ -42,17 +43,18 @@ trait Transactable
     /**
      * @param Amount $amount
      * @param $destination
-     * @param Escrow | null $associatedEscrow
+     * @param callable $callable
      *
      * @return Transaction
      */
-    public function withdraw($amount, $destination, $associatedEscrow = null)
+    public function withdraw($amount, $destination, $callable = null)
     {
         return tap(app(Transaction::class)
             ->setAmount($amount)
             ->setSource($this)
             ->setDestination($destination)
-            ->setAssociatedEscrow($associatedEscrow ?: $this->guessEscrowAssociation($destination)))
+            ->setAssociatedEscrow($this->guessEscrowAssociation($destination))
+            ->pipe($callable))
             ->save();
     }
 
@@ -76,5 +78,6 @@ trait Transactable
         } elseif ($other instanceof Escrow) {
             return $other;
         }
+        return null;
     }
 }

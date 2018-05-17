@@ -11,6 +11,8 @@ use Makeable\LaravelEscrow\Contracts\CustomerContract;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract as PaymentGateway;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Events\CustomerCharged;
+use Makeable\LaravelEscrow\Labels\AccountDeposit;
+use Makeable\LaravelEscrow\Labels\Label;
 
 class ChargeCustomer
 {
@@ -18,18 +20,21 @@ class ChargeCustomer
 
     public $customer;
     public $amount;
-    public $associatedEscrow = null;
+    public $associatedEscrow;
+    public $label;
 
     /**
      * @param CustomerContract $customer
-     * @param Amount           $amount
-     * @param Escrow | null    $associatedEscrow
+     * @param Amount $amount
+     * @param Escrow | null $associatedEscrow
+     * @param Label | string | null $label
      */
-    public function __construct($customer, $amount, $associatedEscrow = null)
+    public function __construct($customer, $amount, $associatedEscrow = null, $label = null)
     {
         $this->customer = $customer;
         $this->amount = $amount;
         $this->associatedEscrow = $associatedEscrow;
+        $this->label = $label;
     }
 
     public function handle()
@@ -37,7 +42,10 @@ class ChargeCustomer
         if ($this->amount->gt(Amount::zero())) {
             $charge = app(PaymentGateway::class)->charge($this->customer, $this->amount, $this->associatedEscrow);
 
-            CustomerCharged::dispatch($this->customer, $this->customer->deposit($this->amount, $charge, $this->associatedEscrow));
+            CustomerCharged::dispatch($this->customer, $this->customer->deposit($this->amount, $charge, function ($transaction) {
+                $transaction->setAssociatedEscrow($this->associatedEscrow);
+                $transaction->setLabel($this->label ?: app(AccountDeposit::class));
+            }));
         }
     }
 }

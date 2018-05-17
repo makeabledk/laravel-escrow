@@ -7,8 +7,11 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowCancelled;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
+use Makeable\LaravelEscrow\Labels\AccountPayout;
+use Makeable\LaravelEscrow\Labels\EscrowDepositRefund;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
+use Makeable\LaravelEscrow\Transaction;
 
 class CancelEscrowTest extends DatabaseTestCase
 {
@@ -60,6 +63,18 @@ class CancelEscrowTest extends DatabaseTestCase
         $this->assertEquals(1, $this->customer->withdrawals()->count());
 
         $this->assertEquals($this->product->getDepositAmount()->get(), $this->customer->getBalance()->get());
+    }
+
+    /** @test **/
+    public function it_labels_transactions_when_cancelling_and_refunding()
+    {
+        $this->escrow->commit()->cancel();
+
+        $refundedDeposit = $this->customer->deposits()->latest('id')->first();
+        $this->assertInstanceOf(EscrowDepositRefund::class, $refundedDeposit->label());
+
+        $paidOutDeposit = $this->customer->withdrawals()->latest('id')->first();
+        $this->assertInstanceOf(AccountPayout::class, $paidOutDeposit->label());
     }
 
     /** @test **/

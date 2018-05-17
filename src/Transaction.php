@@ -5,9 +5,11 @@ namespace Makeable\LaravelEscrow;
 use BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
+use Makeable\LaravelEscrow\Labels\Label;
 
 class Transaction extends Eloquent
 {
@@ -45,6 +47,16 @@ class Transaction extends Eloquent
     }
 
     /**
+     * @return Label
+     */
+    public function label()
+    {
+        $label = Relation::getMorphedModel($this->label_type) ?: $this->label_type;
+
+        return $label ? new $label($this) : null;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function source()
@@ -76,6 +88,16 @@ class Transaction extends Eloquent
         return $query
             ->where('destination_type', $destination->getMorphClass())
             ->where('destination_id', $destination->getKey());
+    }
+
+    /**
+     * @param Builder $query
+     * @param Label | string $label
+     * @return Builder
+     */
+    public function scopeLabelIs($query, $label)
+    {
+        return $query->where('label_type', (is_object($label) ? $label : new $label)->getMorphClass());
     }
 
     /**
@@ -127,18 +149,32 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Amount|null $amount
+     * @param callable $callable
      *
-     * @return Transaction
+     * @return $this
      */
-    public function reverse(Amount $amount = null)
+    public function reverse($callable = null)
     {
         return tap((new static())
-            ->setAmount($amount ?: $this->amount)
+            ->setAmount($this->amount)
             ->setDestination($this->source)
             ->setSource($this->destination))
             ->setAssociatedEscrow($this->associated_escrow_id)
+            ->pipe($callable)
             ->save();
+    }
+
+    /**
+     * @param $callable
+     * @return $this
+     */
+    public function pipe($callable)
+    {
+        if ($callable !== null) {
+            call_user_func($callable, $this);
+        }
+
+        return $this;
     }
 
     /**
@@ -176,6 +212,17 @@ class Transaction extends Eloquent
         return $this->fill([
             'destination_type' => $source->getMorphClass(),
             'destination_id' => $source->getKey(),
+        ]);
+    }
+
+    /**
+     * @param Label | string $label
+     * @return $this
+     */
+    public function setLabel($label)
+    {
+        return $this->fill([
+            'label_type' => (is_object($label) ? $label : new $label)->getMorphClass()
         ]);
     }
 
