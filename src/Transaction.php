@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
-use Makeable\LaravelEscrow\Labels\TransactionLabel;
+use Makeable\LaravelEscrow\TransactionTypes\TransactionType;
 
 class Transaction extends Eloquent
 {
@@ -47,13 +47,13 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @return TransactionLabel
+     * @return TransactionType
      */
-    public function label()
+    public function type()
     {
-        $label = Relation::getMorphedModel($this->label_type) ?: $this->label_type;
+        $type = Relation::getMorphedModel($this->type) ?: $this->type;
 
-        return $label ? tap(new $label)->bindTransaction($this) : null;
+        return $type ? tap(new $type)->bindTransaction($this) : null;
     }
 
     /**
@@ -92,12 +92,12 @@ class Transaction extends Eloquent
 
     /**
      * @param Builder $query
-     * @param TransactionLabel | string $label
+     * @param TransactionType | string $type
      * @return Builder
      */
-    public function scopeLabelIs($query, $label)
+    public function scopeTypeIs($query, $type)
     {
-        return $query->where('label_type', (is_object($label) ? $label : new $label)->getMorphClass());
+        return $query->where('type', (is_object($type) ? $type : new $type)->getMorphClass());
     }
 
     /**
@@ -216,13 +216,13 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param TransactionLabel | string $label
+     * @param TransactionType | string $type
      * @return $this
      */
-    public function setLabel($label)
+    public function setType($type)
     {
         return $this->fill([
-            'label_type' => (is_object($label) ? $label : new $label)->getMorphClass(),
+            'type' => (is_object($type) ? $type : new $type)->getMorphClass(),
         ]);
     }
 

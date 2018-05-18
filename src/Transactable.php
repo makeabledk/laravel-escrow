@@ -2,6 +2,7 @@
 
 namespace Makeable\LaravelEscrow;
 
+use Illuminate\Database\Eloquent\Builder;
 use Makeable\LaravelCurrencies\Amount;
 
 trait Transactable
@@ -38,6 +39,14 @@ trait Transactable
     public function getBalance()
     {
         return Amount::sum($this->deposits()->get(), 'amount')->subtract(Amount::sum($this->withdrawals()->get(), 'amount'));
+    }
+
+    /**
+     * @return Builder
+     */
+    public function transactions()
+    {
+        return app(Transaction::class)->newQuery()->sourceOrDestinationIs($this);
     }
 
     /**

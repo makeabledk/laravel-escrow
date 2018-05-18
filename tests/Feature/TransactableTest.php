@@ -3,8 +3,8 @@
 namespace Makeable\LaravelEscrow\Tests\Feature;
 
 use Makeable\LaravelCurrencies\Amount;
-use Makeable\LaravelEscrow\Labels\AccountDeposit;
-use Makeable\LaravelEscrow\Labels\AccountPayout;
+use Makeable\LaravelEscrow\TransactionTypes\AccountDeposit;
+use Makeable\LaravelEscrow\TransactionTypes\AccountPayout;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 use Makeable\LaravelEscrow\Transaction;
@@ -34,10 +34,10 @@ class TransactableTest extends DatabaseTestCase
     public function a_callable_can_be_passed_when_depositing()
     {
         $transaction = $this->escrow->deposit(new Amount(100), $this->customer, function (Transaction $transaction) {
-            $transaction->setLabel(AccountDeposit::class);
+            $transaction->setType(AccountDeposit::class);
         });
 
-        $this->assertInstanceOf(AccountDeposit::class, $transaction->label());
+        $this->assertInstanceOf(AccountDeposit::class, $transaction->type());
     }
 
     /** @test **/
@@ -61,10 +61,10 @@ class TransactableTest extends DatabaseTestCase
     public function a_callable_can_be_passed_when_withdrawing()
     {
         $transaction = $this->escrow->withdraw(new Amount(100), $this->provider, function (Transaction $transaction) {
-            $transaction->setLabel(new AccountPayout); // accepts an instance too
+            $transaction->setType(new AccountPayout); // accepts an instance too
         });
 
-        $this->assertInstanceOf(AccountPayout::class, $transaction->label());
+        $this->assertInstanceOf(AccountPayout::class, $transaction->type());
     }
 
     /** @test */
@@ -79,5 +79,17 @@ class TransactableTest extends DatabaseTestCase
         $this->assertTrue(
             $this->escrow->getBalance()->equals($deposit->amount->subtract($withdrawal->amount))
         );
+    }
+
+    /** @test */
+    public function all_transactions_can_be_queried_too()
+    {
+        $withdrawal = factory(Transaction::class)->make();
+        $deposit = factory(Transaction::class)->make();
+
+        $this->escrow->withdrawals()->save($withdrawal);
+        $this->escrow->deposits()->save($deposit);
+
+        $this->assertEquals(2, $this->escrow->transactions()->count());
     }
 }

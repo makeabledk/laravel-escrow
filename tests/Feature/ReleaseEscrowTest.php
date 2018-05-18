@@ -10,9 +10,9 @@ use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Events\EscrowFunded;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\Labels\FinalEscrowDeposit;
-use Makeable\LaravelEscrow\Labels\PlatformFee;
-use Makeable\LaravelEscrow\Labels\ProviderPayment;
+use Makeable\LaravelEscrow\TransactionTypes\FinalEscrowDeposit;
+use Makeable\LaravelEscrow\TransactionTypes\PlatformFee;
+use Makeable\LaravelEscrow\TransactionTypes\ProviderPayment;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 
@@ -72,15 +72,15 @@ class ReleaseEscrowTest extends DatabaseTestCase
         $this->escrow->commit()->release();
 
         $this->assertInstanceOf(FinalEscrowDeposit::class,
-            $this->escrow->deposits()->latest('id')->first()->label()
+            $this->escrow->deposits()->latest('id')->first()->type()
         );
 
         $this->assertInstanceOf(ProviderPayment::class,
-            $this->provider->deposits()->first()->label()
+            $this->provider->deposits()->first()->type()
         );
 
         $this->assertInstanceOf(PlatformFee::class,
-            $this->escrow->withdrawals()->destinationIs(app(SalesAccountContract::class))->first()->label()
+            $this->escrow->withdrawals()->destinationIs(app(SalesAccountContract::class))->first()->type()
         );
     }
 

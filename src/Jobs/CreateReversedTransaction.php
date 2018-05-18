@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Contracts\RefundContract;
-use Makeable\LaravelEscrow\Labels\TransactionLabel;
+use Makeable\LaravelEscrow\TransactionTypes\TransactionType;
 use Makeable\LaravelEscrow\Transaction;
 
 class CreateReversedTransaction
@@ -17,18 +17,18 @@ class CreateReversedTransaction
 
     public $refundable;
     public $refund;
-    public $label;
+    public $transactionType;
 
     /**
      * @param RefundableContract $refundable
      * @param RefundContract $refund
-     * @param TransactionLabel | string | null $label
+     * @param TransactionType | string | null $transactionType
      */
-    public function __construct($refundable, $refund, $label = null)
+    public function __construct($refundable, $refund, $transactionType = null)
     {
         $this->refundable = $refundable;
         $this->refund = $refund;
-        $this->label = $label;
+        $this->transactionType = $transactionType;
     }
 
     public function handle()
@@ -43,7 +43,7 @@ class CreateReversedTransaction
                 ->setSource($original->destination)
                 ->setDestination($this->refund)
                 ->setAssociatedEscrow($original->associated_escrow_id)
-                ->setLabel($this->label)
+                ->setType($this->transactionType)
             )->save();
         });
 
@@ -53,7 +53,7 @@ class CreateReversedTransaction
                 ->setSource($this->refund)
                 ->setDestination($original->source)
                 ->setAssociatedEscrow($original->associated_escrow_id)
-                ->setLabel($this->label)
+                ->setType($this->transactionType)
             )->save();
         });
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Makeable\LaravelEscrow\Labels;
+namespace Makeable\LaravelEscrow\TransactionTypes;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Makeable\LaravelEscrow\Transaction;
 
-trait TransactionLabel
+trait TransactionType
 {
     /**
      * @var Transaction

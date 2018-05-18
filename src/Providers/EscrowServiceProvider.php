@@ -10,7 +10,7 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Events\RefundCreated;
 use Makeable\LaravelEscrow\Jobs\CreateReversedTransaction;
-use Makeable\LaravelEscrow\Labels\AccountPayout;
+use Makeable\LaravelEscrow\TransactionTypes\AccountPayout;
 use Makeable\LaravelEscrow\SalesAccount;
 use Makeable\QueryKit\QueryKitServiceProvider;
 
@@ -27,7 +27,7 @@ class EscrowServiceProvider extends ServiceProvider
 
         if (! class_exists('AddLabelToEscrowTransactionsTable')) {
             $this->publishes([
-                __DIR__.'/../../database/migrations/add_label_type_to_escrow_transactions_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_add_label_type_to_escrow_transactions_table.php'),
+                __DIR__.'/../../database/migrations/add_type_to_escrow_transactions_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_add_type_to_escrow_transactions_table.php'),
             ], 'migrations');
         }
 

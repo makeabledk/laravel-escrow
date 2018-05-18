@@ -6,7 +6,7 @@ use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\EscrowStatus;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\Labels\FinalEscrowDeposit;
+use Makeable\LaravelEscrow\TransactionTypes\FinalEscrowDeposit;
 
 class ReleaseEscrow
 {
