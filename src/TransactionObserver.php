@@ -5,7 +5,7 @@ namespace Makeable\LaravelEscrow;
 class TransactionObserver
 {
     /**
-     * Add description when saving transaction
+     * Add description when saving transaction.
      *
      * @param Transaction $transaction
      */

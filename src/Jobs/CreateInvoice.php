@@ -11,15 +11,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\MorphableContract;
-use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract as PaymentGateway;
-use Makeable\LaravelEscrow\Contracts\ProviderContract;
 use Makeable\LaravelEscrow\Escrow;
-use Makeable\LaravelEscrow\Events\ProviderPaid;
 use Makeable\LaravelEscrow\Invoice;
 use Makeable\LaravelEscrow\Repositories\InvoiceDocumentRepository;
-use Makeable\LaravelEscrow\TransactionTypes\AccountPayout;
-use Makeable\LaravelEscrow\TransactionTypes\TransactionType;
-use Spatie\Browsershot\Browsershot;
 
 class CreateInvoice implements ShouldQueue
 {
@@ -73,7 +67,7 @@ class CreateInvoice implements ShouldQueue
 
             app(InvoiceDocumentRepository::class)->create(view($this->view, [
                 'invoice' => $invoice,
-                'transactions' => $this->transactions
+                'transactions' => $this->transactions,
             ]), $invoice);
 
             $invoice->transactions()->saveMany($this->transactions);

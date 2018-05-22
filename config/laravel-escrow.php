@@ -19,6 +19,6 @@ return [
     'invoice_storage' => [
         'disk' => null,
         'path' => '/',
-        'visibility' => 'public' // public or private
-    ]
+        'visibility' => 'public', // public or private
+    ],
 ];

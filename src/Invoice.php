@@ -3,18 +3,7 @@
 namespace Makeable\LaravelEscrow;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Makeable\EloquentStatus\HasStatus;
 use Makeable\LaravelCurrencies\Amount;
-use Makeable\LaravelEscrow\Contracts\CustomerContract;
-use Makeable\LaravelEscrow\Contracts\EscrowableContract;
-use Makeable\LaravelEscrow\Contracts\ProviderContract;
-use Makeable\LaravelEscrow\Contracts\TransactableContract;
-use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
-use Makeable\LaravelEscrow\Exceptions\InsufficientFunds;
-use Makeable\LaravelEscrow\Interactions\CancelEscrow;
-use Makeable\LaravelEscrow\Interactions\CommitEscrow;
-use Makeable\LaravelEscrow\Interactions\Interact;
-use Makeable\LaravelEscrow\Interactions\ReleaseEscrow;
 
 class Invoice extends Eloquent
 {

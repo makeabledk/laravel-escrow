@@ -11,10 +11,10 @@ use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Events\RefundCreated;
 use Makeable\LaravelEscrow\Jobs\CreateReversedTransaction;
 use Makeable\LaravelEscrow\Repositories\InvoiceDocumentRepository;
+use Makeable\LaravelEscrow\SalesAccount;
 use Makeable\LaravelEscrow\Transaction;
 use Makeable\LaravelEscrow\TransactionObserver;
 use Makeable\LaravelEscrow\TransactionTypes\AccountPayout;
-use Makeable\LaravelEscrow\SalesAccount;
 use Makeable\QueryKit\QueryKitServiceProvider;
 
 class EscrowServiceProvider extends ServiceProvider

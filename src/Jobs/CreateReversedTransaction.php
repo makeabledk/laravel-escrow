@@ -8,8 +8,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
 use Makeable\LaravelEscrow\Contracts\RefundContract;
-use Makeable\LaravelEscrow\TransactionTypes\TransactionType;
 use Makeable\LaravelEscrow\Transaction;
+use Makeable\LaravelEscrow\TransactionTypes\TransactionType;
 
 class CreateReversedTransaction
 {

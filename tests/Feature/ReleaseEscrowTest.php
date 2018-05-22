@@ -10,11 +10,11 @@ use Makeable\LaravelEscrow\Events\EscrowDeposited;
 use Makeable\LaravelEscrow\Events\EscrowFunded;
 use Makeable\LaravelEscrow\Events\EscrowReleased;
 use Makeable\LaravelEscrow\Exceptions\IllegalEscrowAction;
+use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
+use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 use Makeable\LaravelEscrow\TransactionTypes\FinalEscrowDeposit;
 use Makeable\LaravelEscrow\TransactionTypes\PlatformFee;
 use Makeable\LaravelEscrow\TransactionTypes\ProviderPayment;
-use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
-use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 
 class ReleaseEscrowTest extends DatabaseTestCase
 {

@@ -37,7 +37,7 @@ class InvoiceDocumentRepository
         $filename = $filename ?: $invoice->id.'_'.$pdf->hashName();
 
         if (! Storage::disk($this->disk())->putFile($path = $this->path(), $pdf, $filename, [
-            'visibility' => $this->visibility()
+            'visibility' => $this->visibility(),
         ])) {
             throw new \Exception('Failed to store invoice');
         }

@@ -3,9 +3,7 @@
 namespace Makeable\LaravelEscrow\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\Invoice;
-use Makeable\LaravelEscrow\Transaction;
 
 class InvoiceCreated
 {

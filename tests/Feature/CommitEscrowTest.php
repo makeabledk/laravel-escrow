@@ -7,10 +7,10 @@ use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Events\EscrowCommitted;
 use Makeable\LaravelEscrow\Events\EscrowDeposited;
-use Makeable\LaravelEscrow\TransactionTypes\AccountDeposit;
-use Makeable\LaravelEscrow\TransactionTypes\EscrowDeposit;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
+use Makeable\LaravelEscrow\TransactionTypes\AccountDeposit;
+use Makeable\LaravelEscrow\TransactionTypes\EscrowDeposit;
 
 class CommitEscrowTest extends DatabaseTestCase
 {

@@ -3,11 +3,11 @@
 namespace Makeable\LaravelEscrow\Tests\Feature;
 
 use Makeable\LaravelCurrencies\Amount;
-use Makeable\LaravelEscrow\TransactionTypes\AccountDeposit;
-use Makeable\LaravelEscrow\TransactionTypes\AccountPayout;
 use Makeable\LaravelEscrow\Tests\DatabaseTestCase;
 use Makeable\LaravelEscrow\Tests\FakePaymentGateway;
 use Makeable\LaravelEscrow\Transaction;
+use Makeable\LaravelEscrow\TransactionTypes\AccountDeposit;
+use Makeable\LaravelEscrow\TransactionTypes\AccountPayout;
 
 class TransactableTest extends DatabaseTestCase
 {
