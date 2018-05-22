@@ -13,15 +13,16 @@ class DepositSalesAccount
     /**
      * @param Escrow $escrow
      * @param Amount $amount
+     * @param null $transactionType
      */
-    public function handle($escrow, $amount)
+    public function handle($escrow, $amount, $transactionType = null)
     {
         if ($amount->toCents() !== 0 && app()->bound(SalesAccountContract::class)) {
             $transaction = $escrow->withdraw(
-                $escrow->escrowable->getCustomerAmount()->subtract($escrow->escrowable->getProviderAmount()),
+                $amount,
                 $salesAccount = app(SalesAccountContract::class),
-                function ($transaction) {
-                    $transaction->setType(app(PlatformFee::class));
+                function ($transaction) use ($transactionType) {
+                    $transaction->setType($transactionType ?: app(PlatformFee::class));
                 }
             );
             event(new SalesAccountDeposited($salesAccount, $transaction));

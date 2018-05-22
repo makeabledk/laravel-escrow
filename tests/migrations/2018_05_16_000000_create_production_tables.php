@@ -15,6 +15,6 @@ class CreateProductionTables extends Migration
     {
         (new CreateEscrowsTable())->up();
         (new CreateEscrowTransactionsTable())->up();
-        (new AddTransactionTypeToEscrowTransactionsTable())->up();
+        (new AddTypeToEscrowTransactionsTable())->up();
     }
 }

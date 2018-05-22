@@ -6,6 +6,7 @@ use BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\RefundableContract;
@@ -91,13 +92,34 @@ class Transaction extends Eloquent
     }
 
     /**
+     * @param $query
+     * @return Builder
+     */
+    public function scopeNotInvoiced($query)
+    {
+        return $query->whereNull('escrow_invoice_id');
+    }
+
+    /**
+     * @param Builder $query
+     * @param array | mixed
+     * @return Builder
+     */
+    public function scopeTypeIn($query, $types)
+    {
+        return $query->whereIn('type', array_map(function ($type) {
+            return (is_object($type) ? $type : new $type)->getMorphClass();
+        }, Arr::wrap($types)));
+    }
+
+    /**
      * @param Builder $query
      * @param TransactionType | string $type
      * @return Builder
      */
     public function scopeTypeIs($query, $type)
     {
-        return $query->where('type', (is_object($type) ? $type : new $type)->getMorphClass());
+        return $this->scopeTypeIn($query, $type);
     }
 
     /**
@@ -246,6 +268,6 @@ class Transaction extends Eloquent
      */
     public function getAmountAttribute()
     {
-        return new Amount($this->attributes['amount'], $this->currency);
+        return new Amount($this->attributes['amount'], $this->currency_code);
     }
 }

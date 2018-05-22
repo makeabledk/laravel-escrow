@@ -35,4 +35,12 @@ trait TransactionType
 
         return static::class;
     }
+
+    /**
+     * @return int
+     */
+    public function vatPercent()
+    {
+        return 0;
+    }
 }

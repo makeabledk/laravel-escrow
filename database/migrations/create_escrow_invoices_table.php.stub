@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+
+class CreateEscrowInvoicesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('escrow_invoices', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('line1')->nullable();
+            $table->string('line2')->nullable();
+            $table->decimal('total_amount');
+            $table->decimal('vat_amount');
+            $table->string('currency_code');
+            $table->nullableMorphs('invoiceable');
+            $table->string('storage_path')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('escrow_transactions', function (Blueprint $table) {
+            $table->decimal('vat_amount')->nullable()->after('amount');
+            $table->decimal('vat_percent')->nullable()->after('vat_amount');
+            $table->unsignedInteger('escrow_invoice_id')->after('associated_escrow_id');
+
+            $table->foreign('escrow_invoice_id')->references('id')->on('escrow_invoices')->onDelete('set null')->onUpdate('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('escrow_invoices');
+    }
+}

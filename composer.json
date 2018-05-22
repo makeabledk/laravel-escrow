@@ -21,7 +21,11 @@
         "laravel/laravel": "5.5",
         "doctrine/dbal": "^2.5",
         "orchestra/testbench": "~3.5",
-        "mockery/mockery": "^0.9.9"
+        "mockery/mockery": "^0.9.9",
+        "spatie/browsershot": "^3.22"
+    },
+    "suggests": {
+        "spatie/browsershot": "Required for generating invoices"
     },
     "autoload-dev": {
         "psr-4": {

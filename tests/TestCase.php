@@ -4,6 +4,7 @@ namespace Makeable\LaravelEscrow\Tests;
 
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Storage;
 use Makeable\LaravelCurrencies\Amount;
 use Makeable\LaravelEscrow\Escrow;
 use Makeable\LaravelEscrow\EscrowFacade;
@@ -23,6 +24,8 @@ class TestCase extends BaseTestCase
 
         // Put Amount in test mode so we don't need a currency implementation
         Amount::test();
+
+        Storage::fake();
     }
 
     /**

@@ -10,6 +10,9 @@ use Makeable\LaravelEscrow\Contracts\PaymentGatewayContract;
 use Makeable\LaravelEscrow\Contracts\SalesAccountContract;
 use Makeable\LaravelEscrow\Events\RefundCreated;
 use Makeable\LaravelEscrow\Jobs\CreateReversedTransaction;
+use Makeable\LaravelEscrow\Repositories\InvoiceDocumentRepository;
+use Makeable\LaravelEscrow\Transaction;
+use Makeable\LaravelEscrow\TransactionObserver;
 use Makeable\LaravelEscrow\TransactionTypes\AccountPayout;
 use Makeable\LaravelEscrow\SalesAccount;
 use Makeable\QueryKit\QueryKitServiceProvider;
@@ -31,15 +34,21 @@ class EscrowServiceProvider extends ServiceProvider
             ], 'migrations');
         }
 
+        $this->mergeConfigFrom(__DIR__.'/../../config/laravel-escrow.php', 'laravel-escrow');
+        $this->publishes([__DIR__.'/../../config/laravel-escrow.php' => config_path('laravel-escrow.php')], 'config');
+
         Event::listen(RefundCreated::class, function ($event) {
             CreateReversedTransaction::dispatch($event->refundable, $event->refund, app(AccountPayout::class));
         });
+
+        Transaction::observe(app(TransactionObserver::class));
     }
 
     public function register()
     {
         $this->app->register(CurrenciesServiceProvider::class);
         $this->app->register(QueryKitServiceProvider::class);
+        $this->app->singleton(InvoiceDocumentRepository::class);
         $this->app->singleton(PaymentGatewayContract::class, function () {
             return new StripePaymentGateway(config('services.stripe.secret'));
         });
